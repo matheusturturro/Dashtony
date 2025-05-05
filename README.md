@@ -1,3 +1,67 @@
+# DashTony - Sistema de Gestão de Palestras
+
+Sistema desenvolvido para gerenciamento de palestras, incluindo cadastro, listagem e controle de status.
+
+## Tecnologias Utilizadas
+
+- React
+- TypeScript
+- Vite
+- Firebase
+- CSS Modules
+
+## Funcionalidades
+
+- Cadastro de palestras com informações detalhadas
+- Listagem de palestras cadastradas
+- Controle de status das palestras
+- Gestão de pagamentos e contratantes
+- Suporte a hospedagem inclusa
+
+## Configuração do Ambiente
+
+1. Clone o repositório
+```bash
+git clone [URL_DO_REPOSITÓRIO]
+```
+
+2. Instale as dependências
+```bash
+npm install
+```
+
+3. Configure as variáveis de ambiente
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+```
+VITE_FIREBASE_API_KEY=sua_api_key
+VITE_FIREBASE_AUTH_DOMAIN=seu_auth_domain
+VITE_FIREBASE_PROJECT_ID=seu_project_id
+VITE_FIREBASE_STORAGE_BUCKET=seu_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=seu_messaging_sender_id
+VITE_FIREBASE_APP_ID=seu_app_id
+```
+
+4. Inicie o projeto
+```bash
+npm run dev
+```
+
+## Estrutura do Projeto
+
+- `/src/components` - Componentes React
+- `/src/services` - Serviços e configurações
+- `/src/types` - Definições de tipos TypeScript
+- `/src/contexts` - Contextos React
+- `/src/pages` - Páginas da aplicação
+
+## Contribuição
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
