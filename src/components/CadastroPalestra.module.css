@@ -1,0 +1,83 @@
+.form {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;     
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  transition: all 0.3s ease;
+}
+
+.form.editing {
+  background: #f8f9fa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-left: 4px solid #007bff;
+}
+
+.form h2 {
+  grid-column: 1 / -1;
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.form.editing h2 {
+  color: #007bff;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field label {
+  font-weight: 500;
+  color: #333;
+}
+
+.field input,
+.field select,
+.field textarea {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.button {
+  grid-column: 1 / -1;
+  padding: 1rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkboxContainer input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.checkboxContainer span {
+  color: #666;
+}

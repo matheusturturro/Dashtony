@@ -1,0 +1,83 @@
+.app {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.app, 
+.main {
+  box-sizing: border-box;
+}
+
+.header {
+  background-color: white;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.header h1 {
+  margin: 0;
+  color: #333;
+  font-size: 1.5rem;
+}
+
+.main {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.main > *:first-child {
+  flex: 2; /* ListaPalestras ocupa mais espaço */
+}
+
+.main > *:last-child {
+  flex: 1; /* CadastroPalestra ocupa menos espaço */
+  min-width: 400px; /* Largura mínima para o formulário */
+}
+
+/* Em telas médias */
+@media (max-width: 1023px) {
+  .main {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .main > *:first-child,
+  .main > *:last-child {
+    flex: none;
+    width: 100%;
+  }
+}
+
+/* Em telas pequenas */
+@media (max-width: 640px) {
+  .main {
+    padding: 0.5rem;
+  }
+}
+
+.form {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  display: grid;
+  gap: 1rem;
+  /* Ajusta automaticamente o número de colunas baseado no espaço disponível */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+/* Em telas muito pequenas, força uma única coluna */
+@media (max-width: 640px) {
+  .form {
+    grid-template-columns: 1fr;
+  }
+}
