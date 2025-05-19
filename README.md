@@ -116,3 +116,5 @@ export default tseslint.config({
   },
 })
 ```
+npm.cmd run dev
+node dist/server/index.js

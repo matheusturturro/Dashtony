@@ -67,7 +67,7 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
 
   return (
     <div className={styles.container}>
-      <h2>Palestras Cadastradas</h2>
+      <h2>Palestras Cadastradas</h2> 
       <div className={styles.tableContainer}>
         <table className={styles.table}>
           <thead>
@@ -76,22 +76,28 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
               <th>Nome</th>
               <th>Local</th>
               <th>Horário</th>
+              <th>🏨</th>
+              <th>✈️</th>
+              <th>🤖</th>
+              <th>Valor</th>
+              <th>Pago</th>
               <th>Nota</th>
-              <th>Pagamento</th>
-              <th>Status</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody>
             {palestras.map((palestra) => (
-              <tr key={palestra.id}>
+              <tr key={palestra.id} data-status={palestra.status}>
                 <td>{formatarData(palestra.dataMarcada)}</td>
                 <td>{palestra.nome}</td>
                 <td>{palestra.local}</td>
                 <td>{palestra.horarioEvento}</td>
-                <td>{palestra.numeroNF}</td>
+                <td>{palestra.hospedagemInclusa ? '✅' : ''}</td>
+                <td>{palestra.passagem ? '✅' : ''}</td>
+                <td>{palestra.robo ? '✅' : ''}</td>
+                <td>{palestra.valorVenda}</td>
                 <td>{palestra.pagamentoContratante}</td>
-                <td>{palestra.status}</td>
+                <td>{palestra.nota}</td>
                 <td className={styles.acoes}>
                   <button 
                     className={styles.editButton}
@@ -103,7 +109,7 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
                     className={styles.deleteButton}
                     onClick={() => handleExcluirClick(palestra)}
                   >
-                    Excluir
+                    x
                   </button>
                 </td>
               </tr>
