@@ -5,6 +5,7 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "outDir": "dist"
+    "outDir": "dist",
+    "esModuleInterop": true,
   }
 }

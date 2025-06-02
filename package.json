@@ -2,13 +2,13 @@
   "name": "dashtony",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "server": "cross-env NODE_OPTIONS=--loader ts-node/esm node src/server/index.ts"
+    "server": "ts-node src/server/index.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",

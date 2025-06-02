@@ -1,14 +1,9 @@
-import express, { Request, Response } from "express";
+import express, { Request, Response, RequestHandler } from "express";
 import cors from "cors";
 import { google, Auth } from "googleapis";
 import path from "path";
 import { Palestra } from "../types/Palestra";
-
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+  
 
 const app = express();
 app.use(cors());
@@ -146,12 +141,13 @@ app.post("/add-palestra", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/update-palestra", (async (req: Request, res: Response) => {
+app.post("/update-palestra", (async (req: Request, res: Response): Promise<void> => {
   try {
     const palestra: Palestra = req.body;
 
     if (!palestra.id) {
-      return res.status(400).send("ID da palestra é obrigatório para atualização.");
+      res.status(400).send("ID da palestra é obrigatório para atualização.");
+      return;
     }
 
     const client = await auth.getClient();
@@ -167,7 +163,8 @@ app.post("/update-palestra", (async (req: Request, res: Response) => {
     const rowIndex = rows.findIndex(row => row[0] === palestra.id);
 
     if (rowIndex === -1) {
-      return res.status(404).send("Palestra não encontrada no Google Sheets.");
+      res.status(404).send("Palestra não encontrada no Google Sheets.");
+      return;
     }
 
     // Update the row (rowIndex + 1 because Sheets are 1-indexed and +1 for header)
@@ -220,7 +217,7 @@ app.post("/update-palestra", (async (req: Request, res: Response) => {
     console.error("Erro ao atualizar palestra:", error);
     res.status(500).send("Erro ao atualizar palestra.");
   }
-}) as express.RequestHandler);
+}) as RequestHandler);
 
 app.listen(3001, () => {
   console.log("Servidor rodando em http://localhost:3001");
