@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-sheets-key.json
+src/server/sheets-key.json
 
 # Editor directories and files
 .vscode/*
