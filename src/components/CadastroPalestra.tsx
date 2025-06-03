@@ -46,6 +46,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva 
     pagamentoContratante: '',
     valorFinalRecebido: 0,
     custoFinal: 0,
+    agendado: false,
   })
 
   const [loading, setLoading] = useState(false)
@@ -89,6 +90,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva 
         pagamentoContratante: '',
         valorFinalRecebido: 0,
         custoFinal: 0,
+        agendado: false,
       })
     }
   }, [palestraSelecionada])
@@ -242,6 +244,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva 
         pagamentoContratante: '',
         valorFinalRecebido: 0,
         custoFinal: 0,
+        agendado: false,
       })
       
       // Notifica o componente pai
@@ -518,6 +521,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva 
           placeholder="Digite o valor"
         />
       </div>
+
 
       <button 
         type="submit" 

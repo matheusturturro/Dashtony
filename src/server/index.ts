@@ -23,60 +23,53 @@ async function initializeSheetHeaders() {
     const client = await auth.getClient();
     const sheets = google.sheets({ version: "v4", auth: client as Auth.OAuth2Client });
 
-    // Check if headers exist
-    const response = await sheets.spreadsheets.values.get({
+    // Sempre atualiza os cabeçalhos para garantir que todos estejam presentes
+    await sheets.spreadsheets.values.update({
       spreadsheetId,
       range: "Página1!A1:AH1",
+      valueInputOption: "RAW",
+      requestBody: {
+        values: [[
+          "ID",
+          "Tipo",
+          "Status",
+          "Valor Venda",
+          "Lucro Final",
+          "Nome",
+          "Data Marcada",
+          "Horário Evento",
+          "Local",
+          "Observações",
+          "Info Ida",
+          "Info Retorno",
+          "Hospedagem Inclusa",
+          "Passagem",
+          "Nota",
+          "Humanoide",
+          "Robô",
+          "Observações Robô",
+          "Vendida Por",
+          "Valor Comissão",
+          "Endereço Hospedagem",
+          "Endereço Passagem",
+          "Status Comissão",
+          "Valor Bônus",
+          "Data Bônus",
+          "Status Bônus",
+          "Data NF",
+          "Número NF",
+          "Valor NF Paga",
+          "Valor Imposto",
+          "Pagamento Contratante",
+          "Valor Final Recebido",
+          "Custo Final",
+          "Agendado"
+        ]]
+      }
     });
-
-    if (!response.data.values || response.data.values.length === 0) {
-      // Add headers if they don't exist
-      await sheets.spreadsheets.values.update({
-        spreadsheetId,
-        range: "Página1!A1:AH1",
-        valueInputOption: "RAW",
-        requestBody: {
-          values: [[
-            "ID",
-            "Tipo",
-            "Status",
-            "Valor Venda",
-            "Lucro Final",
-            "Nome",
-            "Data Marcada",
-            "Horário Evento",
-            "Local",
-            "Observações",
-            "Info Ida",
-            "Info Retorno",
-            "Hospedagem Inclusa",
-            "Passagem",
-            "Nota",
-            "Humanoide",
-            "Robô",
-            "Observações Robô",
-            "Vendida Por",
-            "Valor Comissão",
-            "Endereço Hospedagem",
-            "Endereço Passagem",
-            "Status Comissão",
-            "Valor Bônus",
-            "Data Bônus",
-            "Status Bônus",
-            "Data NF",
-            "Número NF",
-            "Valor NF Paga",
-            "Valor Imposto",
-            "Pagamento Contratante",
-            "Valor Final Recebido",
-            "Custo Final"
-          ]]
-        }
-      });
-      console.log("Headers initialized successfully");
-    }
+    console.log("Headers updated successfully");
   } catch (error) {
-    console.error("Error initializing headers:", error);
+    console.error("Error updating headers:", error);
   }
 }
 
@@ -85,7 +78,10 @@ initializeSheetHeaders();
 
 app.post("/add-palestra", async (req: Request, res: Response) => {
   try {
-    const palestra: Palestra = req.body;
+    const palestra: Palestra = {
+      ...req.body,
+      agendado: false // Garante que sempre inicie como false
+    };
 
     const client = await auth.getClient();
     const sheets = google.sheets({ version: "v4", auth: client as Auth.OAuth2Client });
@@ -129,7 +125,8 @@ app.post("/add-palestra", async (req: Request, res: Response) => {
             palestra.valorImposto,
             palestra.pagamentoContratante,
             palestra.valorFinalRecebido,
-            palestra.custoFinal
+            palestra.custoFinal,
+            "Não" // Exibe "Não" na planilha quando false
           ]]
         }
       });
@@ -143,7 +140,10 @@ app.post("/add-palestra", async (req: Request, res: Response) => {
 
 app.post("/update-palestra", (async (req: Request, res: Response): Promise<void> => {
   try {
-    const palestra: Palestra = req.body;
+    const palestra: Palestra = {
+      ...req.body,
+      agendado: req.body.agendado || false // Garante que sempre tenha um valor
+    };
 
     if (!palestra.id) {
       res.status(400).send("ID da palestra é obrigatório para atualização.");
@@ -207,7 +207,8 @@ app.post("/update-palestra", (async (req: Request, res: Response): Promise<void>
           palestra.valorImposto,
           palestra.pagamentoContratante,
           palestra.valorFinalRecebido,
-          palestra.custoFinal
+          palestra.custoFinal,
+          palestra.agendado ? "Sim" : "Não" // Exibe "Sim" ou "Não" na planilha
         ]]
       }
     });

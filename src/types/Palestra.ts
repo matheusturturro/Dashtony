@@ -33,5 +33,6 @@ export interface Palestra {
     pagamentoContratante: string
     valorFinalRecebido: number
     custoFinal: number
+    agendado: boolean
 }
   
