@@ -67,7 +67,7 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
 
   return (
     <div className={styles.container}>
-      <h2>Palestras Cadastradas</h2> 
+      <h2>Palestras Cadastradas</h2>
       <div className={styles.tableContainer}>
         <table className={styles.table}>
           <thead>
@@ -99,13 +99,13 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
                 <td>{palestra.pagamentoContratante}</td>
                 <td>{palestra.nota}</td>
                 <td className={styles.acoes}>
-                  <button 
+                  <button
                     className={styles.editButton}
                     onClick={() => onEditar(palestra)}
                   >
                     Detalhes
                   </button>
-                  <button 
+                  <button
                     className={styles.deleteButton}
                     onClick={() => handleExcluirClick(palestra)}
                   >
@@ -141,7 +141,7 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
               <p className={styles.erro}>{erroConfirmacao}</p>
             )}
             <div className={styles.modalBotoes}>
-              <button 
+              <button
                 className={styles.cancelarButton}
                 onClick={() => {
                   setPalestraParaExcluir(null)
@@ -151,7 +151,7 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
               >
                 Cancelar
               </button>
-              <button 
+              <button
                 className={styles.confirmarButton}
                 onClick={handleConfirmarExclusao}
               >
@@ -163,4 +163,4 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
       )}
     </div>
   )
-} 
+}
