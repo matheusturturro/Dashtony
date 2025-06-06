@@ -168,6 +168,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva 
       if (palestraSelecionada) {
         // Atualiza palestra existente (mantém o id atual)
         const palestraData = { ...form, id: palestraSelecionada.id };
+        console.log('ID enviado para edição:', palestraData.id);
         // Usa o id do Firestore salvo em palestraSelecionada.id
         const docRef = doc(collection(db, 'palestras'), palestraSelecionada.id);
         await updateDoc(docRef, palestraData);
