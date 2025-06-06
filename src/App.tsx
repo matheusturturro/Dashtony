@@ -22,7 +22,7 @@ function App() {
       </header>
       <main className={styles.main}>
         <ListaPalestras onEditar={handleEditarPalestra} />
-        <CadastroPalestra 
+        <CadastroPalestra
           palestraSelecionada={palestraSelecionada}
           onPalestraSalva={() => setPalestraSelecionada(null)}
         />

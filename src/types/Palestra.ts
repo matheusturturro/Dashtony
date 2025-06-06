@@ -13,8 +13,8 @@ export interface Palestra {
     infoIda: string
     infoRetorno: string
     hospedagemInclusa: boolean
-    passagem: boolean //nova 
-    nota: boolean //nova     
+    passagem: boolean //nova
+    nota: boolean //nova
     humanoide: boolean //nova
     robo: boolean //nova
     observacoesRobo: string //nova
@@ -35,4 +35,3 @@ export interface Palestra {
     custoFinal: number
     agendado: boolean
 }
-  
