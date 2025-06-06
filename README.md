@@ -1,14 +1,26 @@
 # DashTony - Sistema de Gestão de Palestras
 
 Sistema desenvolvido para gerenciamento de palestras, incluindo cadastro, listagem e controle de status.
+## Visao Geral
 
-## Tecnologias Utilizadas
+Este projeto foi criado para facilitar o controle de eventos e palestras. A aplicacao possui uma interface simples onde e possivel cadastrar e acompanhar todas as informacoes sobre cada palestra. Quando voce preenche o formulario e salva, os dados sao enviados para o Google Sheets atraves de um pequeno servidor em Node.js. Dessa forma e possivel ter tudo registrado em uma planilha acessivel por toda a equipe, sem precisar instalar programas complexos.
 
-- React
-- TypeScript
-- Vite
-- Firebase
-- CSS Modules
+Passo a passo de uso para quem nao e programador:
+
+1. Abra o sistema em seu navegador e clique em "Cadastrar Palestra".
+2. Preencha os campos do formulario (nome, data, local, etc.).
+3. Ao salvar, as informacoes sao enviadas ao servidor, que grava tudo na planilha do Google.
+4. Na tela de listagem e possivel ver todas as palestras registradas e o status de cada uma.
+5. Se precisar atualizar algo, basta editar a palestra e salvar novamente; o servidor atualiza a mesma linha na planilha.
+
+
+## Tecnologias e Abordagens
+
+- **React** e **Vite** foram escolhidos para a construcao do front-end pela rapidez na atualizacao da interface. Poderiamos ter usado jQuery ou manipulacao direta do DOM, mas React facilita a criacao de componentes reutilizaveis.
+- **TypeScript** ajuda a evitar erros comuns de JavaScript ao checar tipos em tempo de desenvolvimento. Sem ele seria necessario muito mais testes manuais.
+- **Firebase/Firestore** armazena as palestras na nuvem com sincronizacao em tempo real. Uma alternativa seria manter um servidor de banco de dados proprio, o que exigiria mais manutencao.
+- O **backend em Node.js** usa Express para gravar tudo na planilha do Google via API. Poderiamos usar um banco relacional tradicional, mas o Google Sheets e familiar para a equipe e dispensa instalacao de software extra.
+- Utilizamos **CSS Modules** para isolar estilos; CSS global facilitaria conflitos entre componentes.
 
 ## Funcionalidades
 
@@ -61,6 +73,28 @@ npm run dev
 3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
+
+## Backend
+
+Para rodar o servidor de integração com o Google Sheets utilize:
+
+```bash
+npm run server
+```
+
+O comando acima usa as seguintes variáveis de ambiente:
+
+- `SPREADSHEET_ID` – ID da planilha no Google.
+- `GOOGLE_KEY_FILE` – caminho para o arquivo de chave do serviço Google.
+- `PORT` – porta do servidor (opcional, padrão `3001`).
+
+Exemplo de `.env`:
+
+```env
+SPREADSHEET_ID=seu_id_da_planilha
+GOOGLE_KEY_FILE=/caminho/para/google-key.json
+PORT=3001
+```
 
 # React + TypeScript + Vite
 
@@ -116,5 +150,3 @@ export default tseslint.config({
   },
 })
 ```
-npm.cmd run dev
-node dist/server/index.js
