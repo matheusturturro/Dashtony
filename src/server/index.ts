@@ -78,6 +78,15 @@ initializeSheetHeaders();
 
 app.post("/add-palestra", async (req: Request, res: Response) => {
   try {
+    const requiredFields = ["nome", "dataMarcada", "local", "tipo"];
+    const missingFields = requiredFields.filter(field => !req.body[field]);
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        message: "Dados inválidos",
+        error: `Campos ausentes: ${missingFields.join(", ")}`
+      });
+    }
+
     const palestra: Palestra = {
       ...req.body,
       agendado: false // Garante que sempre inicie como false
@@ -131,24 +140,28 @@ app.post("/add-palestra", async (req: Request, res: Response) => {
         }
       });
 
-    res.status(200).send("Palestra adicionada com sucesso!");
+    res.status(200).json({ message: "Palestra adicionada com sucesso!" });
   } catch (error) {
     console.error("Erro:", error);
-    res.status(500).send("Erro ao adicionar palestra.");
+    res.status(500).json({ message: "Erro ao adicionar palestra.", error: String(error) });
   }
 });
 
 app.post("/update-palestra", (async (req: Request, res: Response): Promise<void> => {
   try {
+    const requiredFields = ["id", "nome", "dataMarcada", "local", "tipo"];
+    const missingFields = requiredFields.filter(field => !req.body[field]);
+    if (missingFields.length > 0) {
+      return res.status(400).json({
+        message: "Dados inválidos",
+        error: `Campos ausentes: ${missingFields.join(", ")}`
+      });
+    }
+
     const palestra: Palestra = {
       ...req.body,
       agendado: req.body.agendado || false // Garante que sempre tenha um valor
     };
-
-    if (!palestra.id) {
-      res.status(400).send("ID da palestra é obrigatório para atualização.");
-      return;
-    }
 
     const client = await auth.getClient();
     const sheets = google.sheets({ version: "v4", auth: client as Auth.OAuth2Client });
@@ -211,7 +224,10 @@ app.post("/update-palestra", (async (req: Request, res: Response): Promise<void>
       
       if (idOnSheet !== palestra.id) {
         console.error('Erro de consistência: O ID na linha a ser atualizada no Google Sheets não corresponde ao ID recebido.');
-        res.status(400).send("ID da linha não confere, possível corrupção de dados.");
+        res.status(400).json({
+          message: "Dados inválidos",
+          error: "ID da linha não confere, possível corrupção de dados."
+        });
         return;
       }
       
@@ -263,16 +279,16 @@ app.post("/update-palestra", (async (req: Request, res: Response): Promise<void>
           ]]
         }
       });
-      res.status(200).send("Palestra atualizada com sucesso!");
+      res.status(200).json({ message: "Palestra atualizada com sucesso!" });
       return;
     } else {
       console.log('\nID não encontrado na planilha!');
-      res.status(404).send("Palestra não encontrada no Google Sheets.");
+      res.status(404).json({ message: "Palestra não encontrada no Google Sheets." });
       return;
     }
   } catch (error) {
     console.error("Erro ao atualizar palestra:", error);
-    res.status(500).send("Erro ao atualizar palestra.");
+    res.status(500).json({ message: "Erro ao atualizar palestra.", error: String(error) });
   }
 }) as RequestHandler);
 
