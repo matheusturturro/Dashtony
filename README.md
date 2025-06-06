@@ -62,6 +62,28 @@ npm run dev
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
+## Backend
+
+Para rodar o servidor de integração com o Google Sheets utilize:
+
+```bash
+npm run server
+```
+
+O comando acima usa as seguintes variáveis de ambiente:
+
+- `SPREADSHEET_ID` – ID da planilha no Google.
+- `GOOGLE_KEY_FILE` – caminho para o arquivo de chave do serviço Google.
+- `PORT` – porta do servidor (opcional, padrão `3001`).
+
+Exemplo de `.env`:
+
+```env
+SPREADSHEET_ID=seu_id_da_planilha
+GOOGLE_KEY_FILE=/caminho/para/google-key.json
+PORT=3001
+```
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -116,5 +138,3 @@ export default tseslint.config({
   },
 })
 ```
-npm.cmd run dev
-node dist/server/index.js
