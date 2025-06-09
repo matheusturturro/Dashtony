@@ -1,0 +1,32 @@
+.filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  background: #e5e7eb;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background: #d1d5db;
+}
+
+.activeTodos {
+  background: #fb923c;
+  color: white;
+}
+
+.activeProximos {
+  background: #22c55e;
+  color: white;
+}
+
+.activePassados {
+  background: #6b7280;
+  color: white;
+}
