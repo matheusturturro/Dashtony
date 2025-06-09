@@ -1,0 +1,96 @@
+.card {
+  position: relative;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.header h3 {
+  flex: 1 0 100%;
+  margin: 0;
+  color: #000;
+}
+
+.badge {
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: white;
+}
+
+.palestra { background: #3b82f6; }
+.curso { background: #6366f1; }
+.outro { background: #8b5cf6; }
+.agendado { background: #06b6d4; }
+.proximo { background: #22c55e; }
+.passado { background: #6b7280; }
+
+.info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+}
+
+.financeiro {
+  background: #f3f4f6;
+  padding: 0.5rem;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.lucro {
+  color: #22c55e;
+}
+
+.actions {
+  display: none;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.card:hover .actions {
+  display: flex;
+}
+
+.actions button {
+  flex: 1;
+  padding: 0.25rem;
+  font-size: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.details {
+  background: #60a5fa;
+  color: white;
+}
+.edit {
+  background: #fb923c;
+  color: white;
+}
+.delete {
+  background: #ef4444;
+  color: white;
+}
