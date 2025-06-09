@@ -1,0 +1,21 @@
+.searchBar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f3f4f6;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  width: 100%;
+  max-width: 400px;
+}
+
+.searchBar input {
+  border: none;
+  background: transparent;
+  flex: 1;
+  outline: none;
+}
+
+.icon {
+  color: #666;
+}
