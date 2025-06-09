@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 
+*src/server/sheets-key.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

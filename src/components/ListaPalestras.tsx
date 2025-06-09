@@ -76,34 +76,40 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
               <th>Nome</th>
               <th>Local</th>
               <th>Horário</th>
+              <th>🏨</th>
+              <th>✈️</th>
+              <th>🤖</th>
+              <th>Valor</th>
+              <th>Pago</th>
               <th>Nota</th>
-              <th>Pagamento</th>
-              <th>Status</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody>
             {palestras.map((palestra) => (
-              <tr key={palestra.id}>
+              <tr key={palestra.id} data-status={palestra.status}>
                 <td>{formatarData(palestra.dataMarcada)}</td>
                 <td>{palestra.nome}</td>
                 <td>{palestra.local}</td>
                 <td>{palestra.horarioEvento}</td>
-                <td>{palestra.numeroNF}</td>
+                <td>{palestra.hospedagemInclusa ? '✅' : ''}</td>
+                <td>{palestra.passagem ? '✅' : ''}</td>
+                <td>{palestra.robo ? '✅' : ''}</td>
+                <td>{palestra.valorVenda}</td>
                 <td>{palestra.pagamentoContratante}</td>
-                <td>{palestra.status}</td>
+                <td>{palestra.nota}</td>
                 <td className={styles.acoes}>
-                  <button 
+                  <button
                     className={styles.editButton}
                     onClick={() => onEditar(palestra)}
                   >
                     Detalhes
                   </button>
-                  <button 
+                  <button
                     className={styles.deleteButton}
                     onClick={() => handleExcluirClick(palestra)}
                   >
-                    Excluir
+                    x
                   </button>
                 </td>
               </tr>
@@ -135,7 +141,7 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
               <p className={styles.erro}>{erroConfirmacao}</p>
             )}
             <div className={styles.modalBotoes}>
-              <button 
+              <button
                 className={styles.cancelarButton}
                 onClick={() => {
                   setPalestraParaExcluir(null)
@@ -145,7 +151,7 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
               >
                 Cancelar
               </button>
-              <button 
+              <button
                 className={styles.confirmarButton}
                 onClick={handleConfirmarExclusao}
               >
@@ -157,4 +163,4 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
       )}
     </div>
   )
-} 
+}
