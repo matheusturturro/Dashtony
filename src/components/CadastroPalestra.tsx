@@ -8,11 +8,13 @@ import {v4 as uuidv4} from "uuid";
 
 import { setDoc } from 'firebase/firestore'; // Adicione esta importação
 interface CadastroPalestraProps {
-  palestraSelecionada: Palestra | null;
-  onPalestraSalva: () => void;
+  palestraSelecionada: Palestra | null
+  onPalestraSalva: () => void
+  isOpen: boolean
+  onClose: () => void
 }
 
-export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva }: CadastroPalestraProps) {
+export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva, isOpen, onClose }: CadastroPalestraProps) {
   const [form, setForm] = useState<Palestra>({
     tipo: 'palestra',
     status: '',
@@ -51,6 +53,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva 
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [tab, setTab] = useState<'basico' | 'financeiro' | 'viagem' | 'robo'>('basico')
 
   useEffect(() => {
     if (palestraSelecionada) {
@@ -257,14 +260,27 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva 
       setLoading(false)
     }
   }
+  if (!isOpen) return null
 
   return (
-    <form className={`${styles.form} ${palestraSelecionada ? styles.editing : ''}`} onSubmit={handleSubmit}>
+    <div className={styles.modal}>
+      <div className={styles.modalContent}>
+        <button className={styles.close} onClick={onClose}>×</button>
+        <form className={`${styles.form} ${palestraSelecionada ? styles.editing : ''}`} onSubmit={handleSubmit}>
       <h2>{palestraSelecionada ? 'Editar Palestra' : 'Nova Palestra'}</h2>
-      
+
+      <nav className={styles.tabs}>
+        <button className={tab === 'basico' ? styles.activeTab : ''} onClick={() => setTab('basico')}>Básico</button>
+        <button className={tab === 'financeiro' ? styles.activeTab : ''} onClick={() => setTab('financeiro')}>Financeiro</button>
+        <button className={tab === 'viagem' ? styles.activeTab : ''} onClick={() => setTab('viagem')}>Viagem</button>
+        <button className={tab === 'robo' ? styles.activeTab : ''} onClick={() => setTab('robo')}>Robôs</button>
+      </nav>
+
       {error && <div className={styles.error}>{error}</div>}
       
       {/* Bloco Inicial Prioritário */}
+      {tab === 'basico' && (
+        <>
       <div className={styles.field}>
         <label>Tipo: <span className={styles.required}>*</span></label>
         <select name="tipo" value={form.tipo} onChange={handleChange} required>
@@ -328,7 +344,12 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva 
         <textarea name="observacoes" value={form.observacoes} onChange={handleChange} />
       </div>
 
+      </>
+      )}
+
       {/* Logística */}
+      {tab === 'viagem' && (
+        <>
       <div className={styles.field}>
         <label>Informações de Ida:</label>
         <input type="date" name="infoIda" value={form.infoIda} onChange={handleChange} />
@@ -387,6 +408,12 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva 
         </div>
       )}
 
+      </>
+      )}
+
+      {tab === 'robo' && (
+      <>
+
       <div className={styles.field}>
         <label>Robô:</label>
         <div className={styles.checkboxContainer}>
@@ -403,16 +430,20 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva 
       {form.robo && (
         <div className={styles.field}>
           <label>Observações do Robô:</label>
-          <textarea 
-            name="observacoesRobo" 
-            value={form.observacoesRobo} 
+          <textarea
+            name="observacoesRobo"
+            value={form.observacoesRobo}
             onChange={handleChange}
             placeholder="Digite as observações sobre o robô"
           />
         </div>
       )}
-      
+      </>
+      )}
+
       {/* Venda e Comissão */}
+      {tab === 'financeiro' && (
+        <>
       <div className={styles.field}>
         <label>Vendida Por:</label>
         <input type="text" name="vendidaPor" value={form.vendidaPor} onChange={handleChange} />
@@ -514,23 +545,27 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva 
       </div>
       <div className={styles.field}>
         <label>Custo Final:</label>
-        <input 
-          type="number" 
-          name="custoFinal" 
-          value={form.custoFinal || ''} 
-          onChange={handleChange} 
+        <input
+          type="number"
+          name="custoFinal"
+          value={form.custoFinal || ''}
+          onChange={handleChange}
           placeholder="Digite o valor"
         />
       </div>
 
+      </>
+      )}
 
-      <button 
-        type="submit" 
+      <button
+        type="submit"
         className={styles.button}
         disabled={loading}
       >
         {loading ? 'Salvando...' : 'Salvar Palestra'}
       </button>
-    </form>
+        </form>
+      </div>
+    </div>
   )
 }

@@ -2,23 +2,21 @@ import { useState, useEffect } from 'react'
 import { db } from '../firebase'
 import { collection, query, onSnapshot, orderBy, deleteDoc, doc } from 'firebase/firestore'
 import { Palestra } from '../types/Palestra'
+import EventCard from './EventCard'
+import SearchBar from './SearchBar'
+import FilterButtons, { Filter } from './FilterButtons'
+import StatsCards from './StatsCards'
 import styles from './ListaPalestras.module.css'
 
 interface ListaPalestrasProps {
-  onEditar: (palestra: Palestra) => void;
-}
-
-const formatarData = (dataString: string) => {
-  const data = new Date(dataString + 'T12:00:00')
-  const dia = data.getDate().toString().padStart(2, '0')
-  const mes = (data.getMonth() + 1).toString().padStart(2, '0')
-  const ano = data.getFullYear().toString().slice(-2)
-  return `${dia}/${mes}/${ano}`
+  onEditar: (p: Palestra) => void
 }
 
 export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
   const [palestras, setPalestras] = useState<Palestra[]>([])
   const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
+  const [filter, setFilter] = useState<Filter>('todos')
   const [palestraParaExcluir, setPalestraParaExcluir] = useState<Palestra | null>(null)
   const [confirmacaoTexto, setConfirmacaoTexto] = useState('')
   const [erroConfirmacao, setErroConfirmacao] = useState('')
@@ -26,141 +24,85 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
   useEffect(() => {
     const q = query(collection(db, 'palestras'), orderBy('dataMarcada', 'asc'))
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const palestrasData = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Palestra[]
-      setPalestras(palestrasData)
+      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Palestra[]
+      setPalestras(data)
       setLoading(false)
     })
-
     return () => unsubscribe()
   }, [])
 
-  const handleExcluirClick = (palestra: Palestra) => {
-    setPalestraParaExcluir(palestra)
+  const handleExcluirClick = (p: Palestra) => {
+    setPalestraParaExcluir(p)
     setConfirmacaoTexto('')
     setErroConfirmacao('')
   }
 
   const handleConfirmarExclusao = async () => {
     if (!palestraParaExcluir || !palestraParaExcluir.id) return
-
-    const textoEsperado = `EXCLUIR ${palestraParaExcluir.nome.toUpperCase()}`
-    if (confirmacaoTexto !== textoEsperado) {
-      setErroConfirmacao(`Por favor, digite exatamente: ${textoEsperado}`)
+    const esperado = `EXCLUIR ${palestraParaExcluir.nome.toUpperCase()}`
+    if (confirmacaoTexto !== esperado) {
+      setErroConfirmacao(`Por favor, digite exatamente: ${esperado}`)
       return
     }
-
     try {
       await deleteDoc(doc(db, 'palestras', palestraParaExcluir.id))
       setPalestraParaExcluir(null)
-      setConfirmacaoTexto('')
-      setErroConfirmacao('')
-    } catch (error) {
-      console.error('Erro ao excluir palestra:', error)
+    } catch (e) {
       setErroConfirmacao('Erro ao excluir palestra. Tente novamente.')
     }
   }
 
-  if (loading) return <div className={styles.loading}>Carregando...</div>
+  const now = new Date()
+  const futuros = palestras.filter(p => new Date(p.dataMarcada + 'T00:00:00') >= now).length
+  const passados = palestras.length - futuros
+
+  const filtradas = palestras.filter(p => {
+    const termo = search.toLowerCase()
+    const matches = p.nome.toLowerCase().includes(termo)
+    const data = new Date(p.dataMarcada + 'T00:00:00')
+    const isFuture = data >= now
+    if (filter === 'proximos') return matches && isFuture
+    if (filter === 'passados') return matches && !isFuture
+    return matches
+  })
 
   return (
     <div className={styles.container}>
-      <h2>Palestras Cadastradas</h2> 
-      <div className={styles.tableContainer}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Nome</th>
-              <th>Local</th>
-              <th>Horário</th>
-              <th>🏨</th>
-              <th>✈️</th>
-              <th>🤖</th>
-              <th>Valor</th>
-              <th>Pago</th>
-              <th>Nota</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {palestras.map((palestra) => (
-              <tr key={palestra.id} data-status={palestra.status}>
-                <td>{formatarData(palestra.dataMarcada)}</td>
-                <td>{palestra.nome}</td>
-                <td>{palestra.local}</td>
-                <td>{palestra.horarioEvento}</td>
-                <td>{palestra.hospedagemInclusa ? '✅' : ''}</td>
-                <td>{palestra.passagem ? '✅' : ''}</td>
-                <td>{palestra.robo ? '✅' : ''}</td>
-                <td>{palestra.valorVenda}</td>
-                <td>{palestra.pagamentoContratante}</td>
-                <td>{palestra.nota}</td>
-                <td className={styles.acoes}>
-                  <button 
-                    className={styles.editButton}
-                    onClick={() => onEditar(palestra)}
-                  >
-                    Detalhes
-                  </button>
-                  <button 
-                    className={styles.deleteButton}
-                    onClick={() => handleExcluirClick(palestra)}
-                  >
-                    x
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className={styles.topBar}>
+        <SearchBar value={search} onChange={setSearch} />
+        <FilterButtons active={filter} onChange={setFilter} />
       </div>
+      <StatsCards total={palestras.length} futuros={futuros} passados={passados} />
+      {loading ? (
+        <div className={styles.loading}>Carregando...</div>
+      ) : (
+        <div className={styles.grid}>
+          {filtradas.map(p => (
+            <EventCard
+              key={p.id}
+              event={p}
+              onEditar={onEditar}
+              onExcluir={handleExcluirClick}
+              onDetalhes={onEditar}
+            />
+          ))}
+        </div>
+      )}
 
       {palestraParaExcluir && (
         <div className={styles.modal}>
           <div className={styles.modalContent}>
             <h3>Confirmar Exclusão</h3>
-            <p>Você está prestes a excluir a palestra:</p>
-            <p className={styles.palestraInfo}>
-              <strong>{palestraParaExcluir.nome}</strong> - {formatarData(palestraParaExcluir.dataMarcada)}
-            </p>
-            <p>Para confirmar a exclusão, digite exatamente:</p>
-            <p className={styles.confirmacaoTexto}>
-              EXCLUIR {palestraParaExcluir.nome.toUpperCase()}
-            </p>
-            <input
-              type="text"
-              value={confirmacaoTexto}
-              onChange={(e) => setConfirmacaoTexto(e.target.value)}
-              placeholder="Digite o texto de confirmação"
-              className={styles.confirmacaoInput}
-            />
-            {erroConfirmacao && (
-              <p className={styles.erro}>{erroConfirmacao}</p>
-            )}
+            <p>Digite EXCLUIR {palestraParaExcluir.nome.toUpperCase()} para confirmar.</p>
+            <input value={confirmacaoTexto} onChange={e => setConfirmacaoTexto(e.target.value)} />
+            {erroConfirmacao && <p className={styles.erro}>{erroConfirmacao}</p>}
             <div className={styles.modalBotoes}>
-              <button 
-                className={styles.cancelarButton}
-                onClick={() => {
-                  setPalestraParaExcluir(null)
-                  setConfirmacaoTexto('')
-                  setErroConfirmacao('')
-                }}
-              >
-                Cancelar
-              </button>
-              <button 
-                className={styles.confirmarButton}
-                onClick={handleConfirmarExclusao}
-              >
-                Confirmar Exclusão
-              </button>
+              <button onClick={() => setPalestraParaExcluir(null)}>Cancelar</button>
+              <button onClick={handleConfirmarExclusao}>Confirmar</button>
             </div>
           </div>
         </div>
       )}
     </div>
   )
-} 
+}
