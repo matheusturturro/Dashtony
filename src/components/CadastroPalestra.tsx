@@ -53,7 +53,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [tab, setTab] = useState<'basico' | 'financeiro' | 'viagem' | 'robo'>('basico')
+  const [tab, setTab] = useState<'basico' | 'financeiro' | 'viagem'>('basico')
 
   useEffect(() => {
     if (palestraSelecionada) {
@@ -270,10 +270,9 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       <h2>{palestraSelecionada ? 'Editar Palestra' : 'Nova Palestra'}</h2>
 
       <nav className={styles.tabs}>
-        <button className={tab === 'basico' ? styles.activeTab : ''} onClick={() => setTab('basico')}>Básico</button>
-        <button className={tab === 'financeiro' ? styles.activeTab : ''} onClick={() => setTab('financeiro')}>Financeiro</button>
-        <button className={tab === 'viagem' ? styles.activeTab : ''} onClick={() => setTab('viagem')}>Viagem</button>
-        <button className={tab === 'robo' ? styles.activeTab : ''} onClick={() => setTab('robo')}>Robôs</button>
+        <button type="button" className={tab === 'basico' ? styles.activeTab : ''} onClick={() => setTab('basico')}>Básico</button>
+        <button type="button" className={tab === 'financeiro' ? styles.activeTab : ''} onClick={() => setTab('financeiro')}>Financeiro</button>
+        <button type="button" className={tab === 'viagem' ? styles.activeTab : ''} onClick={() => setTab('viagem')}>Viagem</button>
       </nav>
 
       {error && <div className={styles.error}>{error}</div>}
@@ -344,6 +343,31 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         <textarea name="observacoes" value={form.observacoes} onChange={handleChange} />
       </div>
 
+      <div className={styles.field}>
+        <label>Robô:</label>
+        <div className={styles.checkboxContainer}>
+          <input
+            type="checkbox"
+            name="robo"
+            checked={form.robo}
+            onChange={handleChange}
+          />
+          <span>Sim</span>
+        </div>
+      </div>
+
+      {form.robo && (
+        <div className={styles.field}>
+          <label>Observações do Robô:</label>
+          <textarea
+            name="observacoesRobo"
+            value={form.observacoesRobo}
+            onChange={handleChange}
+            placeholder="Digite as observações sobre o robô"
+          />
+        </div>
+      )}
+
       </>
       )}
 
@@ -399,42 +423,11 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       {form.passagem && (
         <div className={styles.field}>
           <label>Observações da Passagem:</label>
-          <textarea 
-            name="enderecopassagem" 
-            value={form.enderecopassagem} 
+          <textarea
+            name="enderecopassagem"
+            value={form.enderecopassagem}
             onChange={handleChange}
             placeholder="Digite as observações sobre a passagem"
-          />
-        </div>
-      )}
-
-      </>
-      )}
-
-      {tab === 'robo' && (
-      <>
-
-      <div className={styles.field}>
-        <label>Robô:</label>
-        <div className={styles.checkboxContainer}>
-          <input 
-            type="checkbox" 
-            name="robo" 
-            checked={form.robo} 
-            onChange={handleChange} 
-          />
-          <span>Sim</span>
-        </div>
-      </div>
-
-      {form.robo && (
-        <div className={styles.field}>
-          <label>Observações do Robô:</label>
-          <textarea
-            name="observacoesRobo"
-            value={form.observacoesRobo}
-            onChange={handleChange}
-            placeholder="Digite as observações sobre o robô"
           />
         </div>
       )}
