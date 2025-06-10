@@ -22,23 +22,30 @@
 
 .main {
   width: 100%;
-  max-width: 100%;
+  max-width: 100vw;
   margin: 0 auto;
   padding: 2rem;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
 }
 
+.main > * {
+  min-width: 0;
+}
+
 .main > *:first-child {
-  flex: 2; /* ListaPalestras ocupa mais espaço */
+  flex: 2;
+  min-width: 0;
 }
 
 .main > *:last-child {
-  flex: 1; /* CadastroPalestra ocupa menos espaço */
-  min-width: 400px; /* Largura mínima para o formulário */
+  flex: 1;
+  min-width: 320px;
+  max-width: 100%;
 }
 
 /* Em telas médias */
@@ -48,11 +55,11 @@
     padding: 1rem;
     gap: 1rem;
   }
-
   .main > *:first-child,
   .main > *:last-child {
     flex: none;
     width: 100%;
+    min-width: 0;
   }
 }
 
@@ -60,6 +67,9 @@
 @media (max-width: 640px) {
   .main {
     padding: 0.5rem;
+  }
+  .main > *:last-child {
+    min-width: 0;
   }
 }
 
