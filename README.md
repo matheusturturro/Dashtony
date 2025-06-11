@@ -1,152 +1,74 @@
 # DashTony - Sistema de Gestão de Palestras
 
-Sistema desenvolvido para gerenciamento de palestras, incluindo cadastro, listagem e controle de status.
-## Visao Geral
+DashTony é um painel para gerenciamento de palestras desenvolvido em React e TypeScript. As informações cadastradas são armazenadas no Firebase e também enviadas para o Google Sheets através de um pequeno servidor Node. A planilha, por sua vez, alimenta o Google Agenda para que todos os eventos fiquem organizados em um calendário compartilhado.
 
-Este projeto foi criado para facilitar o controle de eventos e palestras. A aplicacao possui uma interface simples onde e possivel cadastrar e acompanhar todas as informacoes sobre cada palestra. Quando voce preenche o formulario e salva, os dados sao enviados para o Google Sheets atraves de um pequeno servidor em Node.js. Dessa forma e possivel ter tudo registrado em uma planilha acessivel por toda a equipe, sem precisar instalar programas complexos.
+Fluxo completo do dado: **Aplicação → Firebase → Google Sheets → Google Agenda**.
 
-Passo a passo de uso para quem nao e programador:
+## Principais Funcionalidades
 
-1. Abra o sistema em seu navegador e clique em "Cadastrar Palestra".
-2. Preencha os campos do formulario (nome, data, local, etc.).
-3. Ao salvar, as informacoes sao enviadas ao servidor, que grava tudo na planilha do Google.
-4. Na tela de listagem e possivel ver todas as palestras registradas e o status de cada uma.
-5. Se precisar atualizar algo, basta editar a palestra e salvar novamente; o servidor atualiza a mesma linha na planilha.
-
-
-## Tecnologias e Abordagens
-
-- **React** e **Vite** foram escolhidos para a construcao do front-end pela rapidez na atualizacao da interface. Poderiamos ter usado jQuery ou manipulacao direta do DOM, mas React facilita a criacao de componentes reutilizaveis.
-- **TypeScript** ajuda a evitar erros comuns de JavaScript ao checar tipos em tempo de desenvolvimento. Sem ele seria necessario muito mais testes manuais.
-- **Firebase/Firestore** armazena as palestras na nuvem com sincronizacao em tempo real. Uma alternativa seria manter um servidor de banco de dados proprio, o que exigiria mais manutencao.
-- O **backend em Node.js** usa Express para gravar tudo na planilha do Google via API. Poderiamos usar um banco relacional tradicional, mas o Google Sheets e familiar para a equipe e dispensa instalacao de software extra.
-- Utilizamos **CSS Modules** para isolar estilos; CSS global facilitaria conflitos entre componentes.
-
-## Funcionalidades
-
-- Cadastro de palestras com informações detalhadas
-- Listagem de palestras cadastradas
-- Controle de status das palestras
+- Cadastro de palestras com diversos detalhes (data, local, pagamentos etc.)
+- Listagem e atualização do status de cada palestra
 - Gestão de pagamentos e contratantes
-- Suporte a hospedagem inclusa
+- Registro de hospedagem e notas fiscais
 
-## Configuração do Ambiente
+## Como Executar
 
-1. Clone o repositório
-```bash
-git clone [URL_DO_REPOSITÓRIO]
-```
+1. **Clone o repositório**
+   ```bash
+   git clone [URL_DO_REPOSITÓRIO]
+   cd dashtony
+   ```
 
-2. Instale as dependências
-```bash
-npm install
-```
+2. **Instale as dependências**
+   ```bash
+   npm install
+   ```
 
-3. Configure as variáveis de ambiente
-Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
-```
-VITE_FIREBASE_API_KEY=sua_api_key
-VITE_FIREBASE_AUTH_DOMAIN=seu_auth_domain
-VITE_FIREBASE_PROJECT_ID=seu_project_id
-VITE_FIREBASE_STORAGE_BUCKET=seu_storage_bucket
-VITE_FIREBASE_MESSAGING_SENDER_ID=seu_messaging_sender_id
-VITE_FIREBASE_APP_ID=seu_app_id
-```
+3. **Crie um arquivo `.env`** na raiz do projeto contendo as chaves do Firebase:
+   ```env
+   VITE_FIREBASE_API_KEY=sua_api_key
+   VITE_FIREBASE_AUTH_DOMAIN=seu_auth_domain
+   VITE_FIREBASE_PROJECT_ID=seu_project_id
+   VITE_FIREBASE_STORAGE_BUCKET=seu_storage_bucket
+   VITE_FIREBASE_MESSAGING_SENDER_ID=seu_messaging_sender_id
+   VITE_FIREBASE_APP_ID=seu_app_id
+   ```
 
-4. Inicie o projeto
-```bash
-npm run dev
-```
+4. **Inicie a aplicação**
+   ```bash
+   npm run dev
+   ```
+   O painel ficará disponível em `http://localhost:5173` (porta padrão do Vite).
 
-## Estrutura do Projeto
+### Servidor de Integração com Google Sheets
 
-- `/src/components` - Componentes React
-- `/src/services` - Serviços e configurações
-- `/src/types` - Definições de tipos TypeScript
-- `/src/contexts` - Contextos React
-- `/src/pages` - Páginas da aplicação
-
-## Contribuição
-
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## Backend
-
-Para rodar o servidor de integração com o Google Sheets utilize:
+Para enviar e atualizar os dados na planilha, rode o servidor Node em paralelo:
 
 ```bash
 npm run server
 ```
 
-O comando acima usa as seguintes variáveis de ambiente:
-
-- `SPREADSHEET_ID` – ID da planilha no Google.
-- `GOOGLE_KEY_FILE` – caminho para o arquivo de chave do serviço Google.
-- `PORT` – porta do servidor (opcional, padrão `3001`).
-
-Exemplo de `.env`:
+Defina as variáveis de ambiente abaixo (por exemplo em `.env` ou diretamente no ambiente):
 
 ```env
 SPREADSHEET_ID=seu_id_da_planilha
 GOOGLE_KEY_FILE=/caminho/para/google-key.json
-PORT=3001
+PORT=3001 # opcional
 ```
 
-# React + TypeScript + Vite
+## Estrutura do Projeto
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+- `src/components` – componentes de interface
+- `src/services` – configurações de Firebase e chamadas de API
+- `src/types` – definições de tipos TypeScript
+- `src/server` – código do servidor de integração com Google Sheets
 
-Currently, two official plugins are available:
+## Contribuindo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Faça um fork do projeto.
+2. Crie uma branch para sua feature (`git checkout -b feature/SuaFeature`).
+3. Commit suas alterações (`git commit -m 'Minha contribuição'`).
+4. Envie a branch (`git push origin feature/SuaFeature`).
+5. Abra um Pull Request.
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
