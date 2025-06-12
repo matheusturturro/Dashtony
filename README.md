@@ -53,22 +53,65 @@ Defina as variáveis de ambiente abaixo (por exemplo em `.env` ou diretamente no
 ```env
 SPREADSHEET_ID=seu_id_da_planilha
 GOOGLE_KEY_FILE=/caminho/para/google-key.json
-PORT=3001 # opcional
+PORT=3001
 ```
 
-## Estrutura do Projeto
+# React + TypeScript + Vite
 
-- `src/components` – componentes de interface
-- `src/services` – configurações de Firebase e chamadas de API
-- `src/types` – definições de tipos TypeScript
-- `src/server` – código do servidor de integração com Google Sheets
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Contribuindo
+Currently, two official plugins are available:
 
-1. Faça um fork do projeto.
-2. Crie uma branch para sua feature (`git checkout -b feature/SuaFeature`).
-3. Commit suas alterações (`git commit -m 'Minha contribuição'`).
-4. Envie a branch (`git push origin feature/SuaFeature`).
-5. Abra um Pull Request.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
 
+## Expanding the ESLint configuration
 
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+
+```js
+export default tseslint.config({
+  extends: [
+    // Remove ...tseslint.configs.recommended and replace with this
+    ...tseslint.configs.recommendedTypeChecked,
+    // Alternatively, use this for stricter rules
+    ...tseslint.configs.strictTypeChecked,
+    // Optionally, add this for stylistic rules
+    ...tseslint.configs.stylisticTypeChecked,
+  ],
+  languageOptions: {
+    // other options...
+    parserOptions: {
+      project: ['./tsconfig.node.json', './tsconfig.app.json'],
+      tsconfigRootDir: import.meta.dirname,
+    },
+  },
+})
+```
+
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default tseslint.config({
+  plugins: {
+    // Add the react-x and react-dom plugins
+    'react-x': reactX,
+    'react-dom': reactDom,
+  },
+  rules: {
+    // other rules...
+    // Enable its recommended typescript rules
+    ...reactX.configs['recommended-typescript'].rules,
+    ...reactDom.configs.recommended.rules,
+  },
+})
+```
+<<<<<<<<< Temporary merge branch 1
+npm.cmd run dev
+node dist/server/index.js
+=========
+>>>>>>>>> Temporary merge branch 2

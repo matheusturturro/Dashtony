@@ -76,15 +76,16 @@ async function initializeSheetHeaders() {
 // Initialize headers when server starts
 initializeSheetHeaders();
 
-app.post("/add-palestra", async (req: Request, res: Response) => {
+app.post("/add-palestra", (async (req: Request, res: Response): Promise<void> => {
   try {
     const requiredFields = ["nome", "dataMarcada", "local", "tipo"];
     const missingFields = requiredFields.filter(field => !req.body[field]);
     if (missingFields.length > 0) {
-      return res.status(400).json({
+      res.status(400).json({
         message: "Dados inválidos",
         error: `Campos ausentes: ${missingFields.join(", ")}`
       });
+      return;
     }
 
     const palestra: Palestra = {
@@ -145,23 +146,32 @@ app.post("/add-palestra", async (req: Request, res: Response) => {
     console.error("Erro:", error);
     res.status(500).json({ message: "Erro ao adicionar palestra.", error: String(error) });
   }
-});
+}) as RequestHandler);
 
 app.post("/update-palestra", (async (req: Request, res: Response): Promise<void> => {
   try {
     const requiredFields = ["id", "nome", "dataMarcada", "local", "tipo"];
     const missingFields = requiredFields.filter(field => !req.body[field]);
     if (missingFields.length > 0) {
-      return res.status(400).json({
+      res.status(400).json({
         message: "Dados inválidos",
         error: `Campos ausentes: ${missingFields.join(", ")}`
       });
+      return;
     }
 
     const palestra: Palestra = {
       ...req.body,
       agendado: req.body.agendado || false // Garante que sempre tenha um valor
     };
+
+    if (!palestra.id) {
+      res.status(400).json({
+        message: "Dados inválidos",
+        error: "ID da palestra é obrigatório"
+      });
+      return;
+    }
 
     const client = await auth.getClient();
     const sheets = google.sheets({ version: "v4", auth: client as Auth.OAuth2Client });
