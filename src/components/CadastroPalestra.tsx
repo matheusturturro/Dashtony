@@ -320,7 +320,13 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       </div>
       <div className={styles.field}>
         <label>Lucro Final:</label>
-        <input type="number" name="lucroFinal" value={form.lucroFinal} onChange={handleChange} />
+        <input 
+          type="number" 
+          name="lucroFinal" 
+          value={form.lucroFinal || ''} 
+          onChange={handleChange} 
+          placeholder="Digite o lucro final"
+        />
       </div>
 
       {/* Detalhes do Evento */}
