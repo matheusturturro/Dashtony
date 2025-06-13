@@ -9,7 +9,7 @@
     "outDir": "dist",
 
     /* Bundler mode */
-    "moduleResolution": "node", 
+    "moduleResolution": "Node16", 
     "noEmit": false,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

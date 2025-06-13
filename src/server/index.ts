@@ -1,7 +1,6 @@
 import express, { Request, Response, RequestHandler } from "express";
 import cors from "cors";
 import { google, Auth } from "googleapis";
-import path from "path";
 import { Palestra } from "../types/Palestra";
   
 
