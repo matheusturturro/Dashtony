@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 const auth = new google.auth.GoogleAuth({
-  keyFile: path.join(__dirname, "sheets-key.json"), // <- coloque sua chave JSON aqui
+  credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS!)
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 
