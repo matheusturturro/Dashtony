@@ -51,7 +51,7 @@
 }
 
 .monthSelector {
-  background: white;
+  background: #f4f0f1;
   padding: 0.5rem;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -63,7 +63,7 @@
 
 .clearFilter {
   padding: 0.5rem 1rem;
-  background: #e5e7eb;
+  background: #740606;
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -71,7 +71,7 @@
 }
 
 .clearFilter:hover {
-  background: #d1d5db;
+  background: #ff0000;
 }
 
 .monthSection {

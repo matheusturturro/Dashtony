@@ -7,6 +7,7 @@
   border-radius: 4px;
   width: 100%;
   max-width: 400px;
+  border: 0.5px solid #1313131a;
 }
 
 .searchBar input {
@@ -14,6 +15,7 @@
   background: transparent;
   flex: 1;
   outline: none;
+  color: #000;
 }
 
 .icon {
