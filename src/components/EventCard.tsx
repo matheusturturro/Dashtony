@@ -31,10 +31,9 @@ export default function EventCard({ event, onEditar, onExcluir, onDetalhes }: Ev
         <span className={`${styles.badge} ${future ? styles.proximo : styles.passado}`}>{future ? 'Próximo' : 'Passado'}</span>
       </div>
       <ul className={styles.info}>
-        <li>📅 {event.dataMarcada}</li>
-        <li>⏰ {event.horarioEvento}</li>
-        <li>📍 {event.local}</li>
-        <li>👤 {event.vendidaPor}</li>
+        <li><span className={styles.icon}>📅</span>{event.dataMarcada} {event.horarioEvento}</li>
+        <li><span className={styles.icon}>📍</span>{event.local}</li>
+        <li><span className={styles.icon}>🏷️</span>{event.tipo}</li>
       </ul>
       <div className={styles.financeiro}>
         <div>R$ {event.valorVenda}</div>

@@ -20,9 +20,8 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
   const [palestraParaExcluir, setPalestraParaExcluir] = useState<Palestra | null>(null)
   const [confirmacaoTexto, setConfirmacaoTexto] = useState('')
   const [erroConfirmacao, setErroConfirmacao] = useState('')
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth())
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
-  const [filterByMonth, setFilterByMonth] = useState(false)
+  const [monthFilter, setMonthFilter] = useState('')
+  const [filterLoading, setFilterLoading] = useState(false)
 
   useEffect(() => {
     const q = query(collection(db, 'palestras'), orderBy('dataMarcada', 'asc'))
@@ -33,6 +32,14 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
     })
     return () => unsubscribe()
   }, [])
+
+  useEffect(() => {
+    if (!loading) {
+      setFilterLoading(true)
+      const t = setTimeout(() => setFilterLoading(false), 300)
+      return () => clearTimeout(t)
+    }
+  }, [search, filter, monthFilter])
 
   const handleExcluirClick = (p: Palestra) => {
     setPalestraParaExcluir(p)
@@ -69,10 +76,11 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
     return matches
   })
 
-  if (filterByMonth) {
+  if (monthFilter) {
+    const [year, month] = monthFilter.split('-').map(Number)
     filtradas = filtradas.filter(p => {
       const d = new Date(p.dataMarcada + 'T00:00:00')
-      return d.getMonth() === selectedMonth && d.getFullYear() === selectedYear
+      return d.getMonth() + 1 === month && d.getFullYear() === year
     })
   }
 
@@ -107,12 +115,6 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
     months.push({ month: next.getMonth(), year: next.getFullYear(), eventos: [] })
   }
 
-  const availableYears = Array.from(new Set(
-    palestras.map(p => new Date(p.dataMarcada + 'T00:00:00').getFullYear())
-  )).sort((a, b) => a - b)
-  if (availableYears.length === 0) {
-    availableYears.push(new Date().getFullYear())
-  }
 
   return (
     <div className={styles.container}>
@@ -120,42 +122,30 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
         <SearchBar value={search} onChange={setSearch} />
         <FilterButtons active={filter} onChange={setFilter} />
         <div className={styles.monthSelector}>
-          <select
-            value={selectedMonth}
-            onChange={e => {
-              setSelectedMonth(Number(e.target.value))
-              setFilterByMonth(true)
-            }}
-          >
-            {Array.from({ length: 12 }).map((_, i) => (
-              <option key={i} value={i}>{new Date(2000, i, 1).toLocaleDateString('pt-BR', { month: 'long' })}</option>
-            ))}
-          </select>
-          <select
-            value={selectedYear}
-            onChange={e => {
-              setSelectedYear(Number(e.target.value))
-              setFilterByMonth(true)
-            }}
-          >
-            {availableYears.map(y => (
-              <option key={y} value={y}>{y}</option>
-            ))}
-          </select>
-          <button className={styles.clearFilter} onClick={() => setFilterByMonth(false)}>
-            Limpar Filtro
-          </button>
+          <input
+            type="month"
+            className={styles.monthInput}
+            value={monthFilter}
+            onChange={e => setMonthFilter(e.target.value)}
+            placeholder="Filtrar por mês e ano..."
+          />
+          {monthFilter && (
+            <button className={styles.clearFilter} onClick={() => setMonthFilter('')}>
+              Limpar Filtro
+            </button>
+          )}
         </div>
       </div>
       <StatsCards total={palestras.length} futuros={futuros} passados={passados} />
       {loading ? (
         <div className={styles.loading}>Carregando...</div>
       ) : (
-        months.map(({ month, year, eventos }) => (
-          <div
-            key={`${year}-${month}`}
-            className={styles.monthSection}
-          >
+        <div className={filterLoading ? styles.fade : ''}>
+          {months.map(({ month, year, eventos }) => (
+            <div
+              key={`${year}-${month}`}
+              className={styles.monthSection}
+            >
             <h2 className={styles.monthTitle}>{formatMonthYear(month, year)}</h2>
             {eventos.length === 0 ? (
               <p className={styles.emptyMonth}>nada marcado</p>
@@ -172,8 +162,9 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
                 ))}
               </div>
             )}
-          </div>
-        ))
+            </div>
+          ))}
+        </div>
       )}
 
       {palestraParaExcluir && (

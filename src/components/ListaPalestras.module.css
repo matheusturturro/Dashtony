@@ -5,7 +5,7 @@
 .topBar {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.5rem;
   justify-content: space-between;
   align-items: center;
   margin: 1rem 0;
@@ -51,27 +51,32 @@
 }
 
 .monthSelector {
-  background: #f4f0f1;
+  background: #f3f4f6;
   padding: 0.5rem;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
   display: flex;
   gap: 0.5rem;
   z-index: 100;
-
+}
+.monthInput {
+  padding: 0.5rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
 }
 
 .clearFilter {
   padding: 0.5rem 1rem;
-  background: #740606;
-  border: none;
-  border-radius: 4px;
+  background: transparent;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 .clearFilter:hover {
-  background: #ff0000;
+  background: #e5e7eb;
+  transform: scale(1.05);
 }
 
 .monthSection {
@@ -81,10 +86,21 @@
 .monthTitle {
   text-transform: capitalize;
   margin: 0 0 0.5rem 0;
+  color: #6b7280;
+  font-weight: 500;
 }
 
 .emptyMonth {
   opacity: 0.5;
   font-size: 0.875rem;
   margin-left: 1rem;
+}
+
+.fade {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
