@@ -48,12 +48,12 @@ Para enviar e atualizar os dados na planilha, rode o servidor Node em paralelo:
 npm run server
 ```
 
-Defina as variáveis de ambiente abaixo (por exemplo em `.env` ou diretamente no ambiente):
+Defina as variáveis de ambiente abaixo (por exemplo em `.env` dentro da pasta `backend` ou diretamente no ambiente):
 
 ```env
 SPREADSHEET_ID=seu_id_da_planilha
-GOOGLE_KEY_FILE=/caminho/para/google-key.json
-PORT=3001
+GOOGLE_APPLICATION_CREDENTIALS=/caminho/para/sheets-key.json
+PORT=3000
 ```
 
 # React + TypeScript + Vite
