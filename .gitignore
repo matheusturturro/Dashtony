@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 
+*backend/sheets-key.json
 *src/server/sheets-key.json
 
 # Editor directories and files
