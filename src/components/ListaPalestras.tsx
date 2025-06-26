@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { db } from '../firebase'
 import { collection, query, onSnapshot, orderBy, deleteDoc, doc } from 'firebase/firestore'
 import { Palestra } from '../types/Palestra'
@@ -66,6 +66,7 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
     return matches
   })
 
+<<<<<<< codex/adicionar-exibição-de-palestras-por-mês
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth())
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const [filterActive, setFilterActive] = useState(false)
@@ -81,6 +82,17 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
   }
 
   const clearFilter = () => setFilterActive(false)
+=======
+  const monthRefs = useRef<Record<string, HTMLDivElement | null>>({})
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth())
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+
+  useEffect(() => {
+    const key = `${selectedYear}-${selectedMonth}`
+    const ref = monthRefs.current[key]
+    if (ref) ref.scrollIntoView({ behavior: 'smooth' })
+  }, [selectedMonth, selectedYear])
+>>>>>>> develop
 
   function formatMonthYear(month: number, year: number) {
     return new Date(year, month, 1).toLocaleDateString('pt-BR', {
@@ -114,37 +126,73 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
 
   const availableYears = Array.from(new Set(months.map(m => m.year))).sort((a, b) => a - b)
 
+<<<<<<< codex/adicionar-exibição-de-palestras-por-mês
   const displayMonths = filterActive
     ? months.filter(m => m.month === selectedMonth && m.year === selectedYear)
     : months
 
+=======
+>>>>>>> develop
   return (
     <div className={styles.container}>
       <div className={styles.topBar}>
         <SearchBar value={search} onChange={setSearch} />
         <FilterButtons active={filter} onChange={setFilter} />
         <div className={styles.monthSelector}>
+<<<<<<< codex/adicionar-exibição-de-palestras-por-mês
           <select value={selectedMonth} onChange={handleMonthChange}>
+=======
+          <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))}>
+>>>>>>> develop
             {Array.from({ length: 12 }).map((_, i) => (
               <option key={i} value={i}>{new Date(2000, i, 1).toLocaleDateString('pt-BR', { month: 'long' })}</option>
             ))}
           </select>
+<<<<<<< codex/adicionar-exibição-de-palestras-por-mês
           <select value={selectedYear} onChange={handleYearChange}>
+=======
+          <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
+>>>>>>> develop
             {availableYears.map(y => (
               <option key={y} value={y}>{y}</option>
             ))}
           </select>
+<<<<<<< codex/adicionar-exibição-de-palestras-por-mês
           {filterActive && (
             <button className={styles.clearFilter} onClick={clearFilter} aria-label="Limpar filtro">×</button>
           )}
         </div>
+=======
+        </div>
+      </div>
+      <div className={styles.monthSelector}>
+        <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))}>
+          {Array.from({ length: 12 }).map((_, i) => (
+            <option key={i} value={i}>{new Date(2000, i, 1).toLocaleDateString('pt-BR', { month: 'long' })}</option>
+          ))}
+        </select>
+        <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
+          {availableYears.map(y => (
+            <option key={y} value={y}>{y}</option>
+          ))}
+        </select>
+>>>>>>> develop
       </div>
       <StatsCards total={palestras.length} futuros={futuros} passados={passados} />
       {loading ? (
         <div className={styles.loading}>Carregando...</div>
       ) : (
+<<<<<<< codex/adicionar-exibição-de-palestras-por-mês
         displayMonths.map(({ month, year, eventos }) => (
           <div key={`${year}-${month}`} className={styles.monthSection}>
+=======
+        months.map(({ month, year, eventos }) => (
+          <div
+            key={`${year}-${month}`}
+            ref={el => { monthRefs.current[`${year}-${month}`] = el }}
+            className={styles.monthSection}
+          >
+>>>>>>> develop
             <h2 className={styles.monthTitle}>{formatMonthYear(month, year)}</h2>
             {eventos.length === 0 ? (
               <p className={styles.emptyMonth}>nada marcado</p>

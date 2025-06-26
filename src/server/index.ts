@@ -2,18 +2,22 @@ import express, { Request, Response, RequestHandler } from "express";
 import cors from "cors";
 import { google, Auth } from "googleapis";
 import { Palestra } from "../types/Palestra";
+import path from "path";
+import dotenv from "dotenv";
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
   
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+const credentialsRaw = process.env.GOOGLE_CREDENTIALS!;
 const auth = new google.auth.GoogleAuth({
-  credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS!),
+  credentials: JSON.parse(credentialsRaw),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 
-const spreadsheetId = "1ZYDkpQpep8LrxDtCuKyVVPjzTZkE4jy3PN_gKy01KkE";
+const spreadsheetId = process.env.SPREADSHEET_ID!;
 const range = "Página1!A:AH";
 
 // Function to initialize sheet headers
@@ -301,6 +305,6 @@ app.post("/update-palestra", (async (req: Request, res: Response): Promise<void>
   }
 }) as RequestHandler);
 
-app.listen(3001, () => {
-  console.log("Servidor rodando em http://localhost:3001");
+app.listen(process.env.PORT || 3001, () => {
+  console.log(`Servidor rodando na porta ${process.env.PORT || 3001}`);
 });
