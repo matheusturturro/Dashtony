@@ -49,3 +49,35 @@
 .erro {
   color: #ef4444;
 }
+
+.monthSelector {
+  display: flex;
+  gap: 0.5rem;
+  background: white;
+  padding: 0.5rem;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.clearFilter {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.monthSection {
+  margin-bottom: 2rem;
+}
+
+.monthTitle {
+  text-transform: capitalize;
+  margin: 0 0 0.5rem 0;
+}
+
+.emptyMonth {
+  opacity: 0.5;
+  font-size: 0.875rem;
+  margin-left: 1rem;
+}
