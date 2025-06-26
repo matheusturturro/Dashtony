@@ -1,19 +1,32 @@
 import express, { Request, Response, RequestHandler } from "express";
 import cors from "cors";
 import { google, Auth } from "googleapis";
+import dotenv from "dotenv";
 import { Palestra } from "../types/Palestra";
+
+dotenv.config();
   
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+const credentials = process.env.GOOGLE_CREDENTIALS;
+const keyFile = process.env.GOOGLE_KEY_FILE || process.env.GOOGLE_APPLICATION_CREDENTIALS;
+
+if (!credentials && !keyFile) {
+  console.warn(
+    "GOOGLE_CREDENTIALS or GOOGLE_KEY_FILE not provided. Attempting to use default credentials."
+  );
+}
+
 const auth = new google.auth.GoogleAuth({
-  credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS!),
+  credentials: credentials ? JSON.parse(credentials) : undefined,
+  keyFile: credentials ? undefined : keyFile,
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 
-const spreadsheetId = "1ZYDkpQpep8LrxDtCuKyVVPjzTZkE4jy3PN_gKy01KkE";
+const spreadsheetId = process.env.SPREADSHEET_ID || "1ZYDkpQpep8LrxDtCuKyVVPjzTZkE4jy3PN_gKy01KkE";
 const range = "Página1!A:AH";
 
 // Function to initialize sheet headers
@@ -301,6 +314,7 @@ app.post("/update-palestra", (async (req: Request, res: Response): Promise<void>
   }
 }) as RequestHandler);
 
-app.listen(3001, () => {
-  console.log("Servidor rodando em http://localhost:3001");
+const port = Number(process.env.PORT) || 3001;
+app.listen(port, () => {
+  console.log(`Servidor rodando em http://localhost:${port}`);
 });

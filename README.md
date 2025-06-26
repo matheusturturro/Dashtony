@@ -48,10 +48,11 @@ Para enviar e atualizar os dados na planilha, rode o servidor Node em paralelo:
 npm run server
 ```
 
-Defina as variáveis de ambiente abaixo (por exemplo em `.env` ou diretamente no ambiente):
+Defina as variáveis de ambiente abaixo (por exemplo em `.env` ou diretamente no ambiente). Você pode usar `GOOGLE_CREDENTIALS` com o conteúdo JSON da chave ou `GOOGLE_KEY_FILE` apontando para o caminho do arquivo:
 
 ```env
 SPREADSHEET_ID=seu_id_da_planilha
+GOOGLE_CREDENTIALS='{...}' # ou
 GOOGLE_KEY_FILE=/caminho/para/google-key.json
 PORT=3001
 ```
@@ -110,8 +111,3 @@ export default tseslint.config({
   },
 })
 ```
-<<<<<<<<< Temporary merge branch 1
-npm.cmd run dev
-node dist/server/index.js
-=========
->>>>>>>>> Temporary merge branch 2
