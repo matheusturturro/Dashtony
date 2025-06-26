@@ -113,6 +113,18 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
       <div className={styles.topBar}>
         <SearchBar value={search} onChange={setSearch} />
         <FilterButtons active={filter} onChange={setFilter} />
+        <div className={styles.monthSelector}>
+          <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))}>
+            {Array.from({ length: 12 }).map((_, i) => (
+              <option key={i} value={i}>{new Date(2000, i, 1).toLocaleDateString('pt-BR', { month: 'long' })}</option>
+            ))}
+          </select>
+          <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
+            {availableYears.map(y => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+        </div>
       </div>
       <div className={styles.monthSelector}>
         <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))}>
