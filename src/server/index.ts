@@ -4,15 +4,16 @@ import { google, Auth } from "googleapis";
 import { Palestra } from "../types/Palestra";
 import path from "path";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
   
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+const credentialsRaw = process.env.GOOGLE_CREDENTIALS!;
 const auth = new google.auth.GoogleAuth({
-  credentials: JSON.parse(process.env.GOOGLE_CREDENTIALS!),
+  credentials: JSON.parse(credentialsRaw),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 
@@ -305,5 +306,5 @@ app.post("/update-palestra", (async (req: Request, res: Response): Promise<void>
 }) as RequestHandler);
 
 app.listen(process.env.PORT || 3001, () => {
-  console.log(`Servidor rodando em http://localhost:${process.env.PORT || 3001}`);
+  console.log(`Servidor rodando na porta ${process.env.PORT || 3001}`);
 });
