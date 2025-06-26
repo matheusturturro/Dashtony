@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import { db } from '../firebase'
 import { collection, query, onSnapshot, orderBy, deleteDoc, doc } from 'firebase/firestore'
 import { Palestra } from '../types/Palestra'
@@ -20,6 +20,9 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
   const [palestraParaExcluir, setPalestraParaExcluir] = useState<Palestra | null>(null)
   const [confirmacaoTexto, setConfirmacaoTexto] = useState('')
   const [erroConfirmacao, setErroConfirmacao] = useState('')
+  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth())
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+  const [filterByMonth, setFilterByMonth] = useState(false)
 
   useEffect(() => {
     const q = query(collection(db, 'palestras'), orderBy('dataMarcada', 'asc'))
@@ -56,7 +59,7 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
   const futuros = palestras.filter(p => new Date(p.dataMarcada + 'T00:00:00') >= now).length
   const passados = palestras.length - futuros
 
-  const filtradas = palestras.filter(p => {
+  let filtradas = palestras.filter(p => {
     const termo = search.toLowerCase()
     const matches = p.nome.toLowerCase().includes(termo)
     const data = new Date(p.dataMarcada + 'T00:00:00')
@@ -66,15 +69,13 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
     return matches
   })
 
-  const monthRefs = useRef<Record<string, HTMLDivElement | null>>({})
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth())
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
+  if (filterByMonth) {
+    filtradas = filtradas.filter(p => {
+      const d = new Date(p.dataMarcada + 'T00:00:00')
+      return d.getMonth() === selectedMonth && d.getFullYear() === selectedYear
+    })
+  }
 
-  useEffect(() => {
-    const key = `${selectedYear}-${selectedMonth}`
-    const ref = monthRefs.current[key]
-    if (ref) ref.scrollIntoView({ behavior: 'smooth' })
-  }, [selectedMonth, selectedYear])
 
   function formatMonthYear(month: number, year: number) {
     return new Date(year, month, 1).toLocaleDateString('pt-BR', {
@@ -106,7 +107,12 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
     months.push({ month: next.getMonth(), year: next.getFullYear(), eventos: [] })
   }
 
-  const availableYears = Array.from(new Set(months.map(m => m.year))).sort((a, b) => a - b)
+  const availableYears = Array.from(new Set(
+    palestras.map(p => new Date(p.dataMarcada + 'T00:00:00').getFullYear())
+  )).sort((a, b) => a - b)
+  if (availableYears.length === 0) {
+    availableYears.push(new Date().getFullYear())
+  }
 
   return (
     <div className={styles.container}>
@@ -114,29 +120,32 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
         <SearchBar value={search} onChange={setSearch} />
         <FilterButtons active={filter} onChange={setFilter} />
         <div className={styles.monthSelector}>
-          <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))}>
+          <select
+            value={selectedMonth}
+            onChange={e => {
+              setSelectedMonth(Number(e.target.value))
+              setFilterByMonth(true)
+            }}
+          >
             {Array.from({ length: 12 }).map((_, i) => (
               <option key={i} value={i}>{new Date(2000, i, 1).toLocaleDateString('pt-BR', { month: 'long' })}</option>
             ))}
           </select>
-          <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
+          <select
+            value={selectedYear}
+            onChange={e => {
+              setSelectedYear(Number(e.target.value))
+              setFilterByMonth(true)
+            }}
+          >
             {availableYears.map(y => (
               <option key={y} value={y}>{y}</option>
             ))}
           </select>
+          <button className={styles.clearFilter} onClick={() => setFilterByMonth(false)}>
+            Limpar Filtro
+          </button>
         </div>
-      </div>
-      <div className={styles.monthSelector}>
-        <select value={selectedMonth} onChange={e => setSelectedMonth(Number(e.target.value))}>
-          {Array.from({ length: 12 }).map((_, i) => (
-            <option key={i} value={i}>{new Date(2000, i, 1).toLocaleDateString('pt-BR', { month: 'long' })}</option>
-          ))}
-        </select>
-        <select value={selectedYear} onChange={e => setSelectedYear(Number(e.target.value))}>
-          {availableYears.map(y => (
-            <option key={y} value={y}>{y}</option>
-          ))}
-        </select>
       </div>
       <StatsCards total={palestras.length} futuros={futuros} passados={passados} />
       {loading ? (
@@ -145,7 +154,6 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
         months.map(({ month, year, eventos }) => (
           <div
             key={`${year}-${month}`}
-            ref={el => { monthRefs.current[`${year}-${month}`] = el }}
             className={styles.monthSection}
           >
             <h2 className={styles.monthTitle}>{formatMonthYear(month, year)}</h2>
