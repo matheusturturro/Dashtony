@@ -11,9 +11,13 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const credentialsPath = process.env.GOOGLE_APPLICATION_CREDENTIALS!;
+const credentialsPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+const credentialsJson = process.env.GOOGLE_CREDENTIALS;
+
 const auth = new google.auth.GoogleAuth({
-  keyFile: credentialsPath,
+  ...(credentialsJson
+    ? { credentials: JSON.parse(credentialsJson) }
+    : { keyFile: credentialsPath! }),
   scopes: ["https://www.googleapis.com/auth/spreadsheets"],
 });
 

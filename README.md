@@ -52,7 +52,10 @@ Defina as variáveis de ambiente abaixo (por exemplo em `.env` dentro da pasta `
 
 ```env
 SPREADSHEET_ID=seu_id_da_planilha
+# Caminho para o arquivo JSON do service account ou deixe em branco se usar GOOGLE_CREDENTIALS
 GOOGLE_APPLICATION_CREDENTIALS=/caminho/para/sheets-key.json
+# Opcionalmente, em vez do caminho acima, defina as credenciais diretamente em formato JSON
+# GOOGLE_CREDENTIALS='{ "type": "service_account", ... }'
 PORT=3000
 ```
 
