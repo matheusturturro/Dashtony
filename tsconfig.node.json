@@ -6,7 +6,7 @@
     "lib": ["ES2023"],
     "module": "Node16", 
     "skipLibCheck": true,
-    "outDir": "dist",
+    "outDir": "backend/dist",
 
     /* Bundler mode */
     "moduleResolution": "Node16", 
@@ -20,5 +20,5 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/server"]
+  "include": ["backend"]
 }

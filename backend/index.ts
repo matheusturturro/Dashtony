@@ -1,10 +1,10 @@
 import express, { Request, Response, RequestHandler } from "express";
 import cors from "cors";
 import { google, Auth } from "googleapis";
-import { Palestra } from "../types/Palestra";
+import { Palestra } from "../src/types/Palestra";
 import path from "path";
 import dotenv from "dotenv";
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
   
 
 const app = express();

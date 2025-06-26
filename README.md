@@ -112,6 +112,6 @@ export default tseslint.config({
 ```
 <<<<<<<<< Temporary merge branch 1
 npm.cmd run dev
-node dist/server/index.js
+node backend/dist/index.js
 =========
 >>>>>>>>> Temporary merge branch 2
