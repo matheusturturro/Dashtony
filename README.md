@@ -32,6 +32,7 @@ Fluxo completo do dado: **Aplicação → Firebase → Google Sheets → Google 
    VITE_FIREBASE_STORAGE_BUCKET=seu_storage_bucket
    VITE_FIREBASE_MESSAGING_SENDER_ID=seu_messaging_sender_id
    VITE_FIREBASE_APP_ID=seu_app_id
+    VITE_BACKEND_URL=http://localhost:3001
    ```
 
 4. **Inicie a aplicação**
@@ -57,6 +58,7 @@ GOOGLE_APPLICATION_CREDENTIALS=/caminho/para/sheets-key.json
 # Opcionalmente, em vez do caminho acima, defina as credenciais diretamente em formato JSON
 # GOOGLE_CREDENTIALS='{ "type": "service_account", ... }'
 PORT=3000
+VITE_BACKEND_URL=http://localhost:3001
 ```
 
 # React + TypeScript + Vite
@@ -113,8 +115,3 @@ export default tseslint.config({
   },
 })
 ```
-<<<<<<<<< Temporary merge branch 1
-npm.cmd run dev
-node dist/server/index.js
-=========
->>>>>>>>> Temporary merge branch 2

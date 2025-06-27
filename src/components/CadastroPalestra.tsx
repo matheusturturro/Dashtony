@@ -7,6 +7,7 @@ import styles from './CadastroPalestra.module.css'
 import {v4 as uuidv4} from "uuid";
 
 import { setDoc } from 'firebase/firestore'; // Adicione esta importação
+const API_URL = import.meta.env.VITE_BACKEND_URL || ""
 interface CadastroPalestraProps {
   palestraSelecionada: Palestra | null
   onPalestraSalva: () => void
@@ -177,7 +178,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         await updateDoc(docRef, palestraData);
         // Atualiza no Google Sheets
         try {
-          const response = await fetch('http://localhost:3001/update-palestra', {
+            const response = await fetch(`${API_URL}/update-palestra`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -199,7 +200,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         await setDoc(docRef, { ...form, id: uuid }); // Usa setDoc em vez de addDoc
         // Envia para o Google Sheets
         try {
-          const response = await fetch('http://localhost:3001/add-palestra', {
+            const response = await fetch(`${API_URL}/add-palestra`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
