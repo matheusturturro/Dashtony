@@ -10,6 +10,7 @@ Fluxo completo do dado: **Aplicação → Firebase → Google Sheets → Google 
 - Listagem e atualização do status de cada palestra
 - Gestão de pagamentos e contratantes
 - Registro de hospedagem e notas fiscais
+- Upload de documentos relacionados às palestras
 
 ## Como Executar
 
@@ -59,7 +60,10 @@ GOOGLE_APPLICATION_CREDENTIALS=/caminho/para/sheets-key.json
 # GOOGLE_CREDENTIALS='{ "type": "service_account", ... }'
 PORT=3000
 VITE_BACKEND_URL=http://localhost:3001
+FIREBASE_STORAGE_BUCKET=seu_storage_bucket
 ```
+
+O backend utiliza `FIREBASE_STORAGE_BUCKET` para fazer upload dos documentos da palestra.
 
 # React + TypeScript + Vite
 

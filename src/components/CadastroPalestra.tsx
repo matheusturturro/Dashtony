@@ -49,12 +49,14 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
     pagamentoContratante: '',
     valorFinalRecebido: 0,
     custoFinal: 0,
+    documentos: [],
     agendado: false,
   })
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [tab, setTab] = useState<'basico' | 'financeiro' | 'viagem'>('basico')
+  const [files, setFiles] = useState<File[]>([])
 
   useEffect(() => {
     if (palestraSelecionada) {
@@ -94,8 +96,10 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         pagamentoContratante: '',
         valorFinalRecebido: 0,
         custoFinal: 0,
+        documentos: [],
         agendado: false,
       })
+      setFiles([])
     }
   }, [palestraSelecionada])
 
@@ -129,6 +133,12 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       ...prev,
       [name]: type === 'checkbox' ? target.checked : value
     }))
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFiles(Array.from(e.target.files))
+    }
   }
 
   const validateForm = (): boolean => {
@@ -169,12 +179,35 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
 
     setLoading(true)
     try {
+      const idEvento = palestraSelecionada ? palestraSelecionada.id! : uuidv4();
+
+      let documentosUrls = form.documentos || [];
+      if (files.length > 0) {
+        const formDataUpload = new FormData();
+        formDataUpload.append('idEvento', idEvento);
+        files.forEach((f) => formDataUpload.append('files', f));
+        try {
+          const uploadResp = await fetch(`${API_URL}/upload-document`, {
+            method: 'POST',
+            body: formDataUpload,
+          });
+          if (uploadResp.ok) {
+            const data = await uploadResp.json();
+            documentosUrls = [...documentosUrls, ...data.urls];
+          } else {
+            console.error('Falha ao enviar arquivos');
+          }
+        } catch (uploadErr) {
+          console.error('Erro no upload:', uploadErr);
+        }
+      }
+
       if (palestraSelecionada) {
         // Atualiza palestra existente (mantém o id atual)
-        const palestraData = { ...form, id: palestraSelecionada.id };
+        const palestraData = { ...form, id: idEvento, documentos: documentosUrls };
         console.log('ID enviado para edição:', palestraData.id);
         // Usa o id do Firestore salvo em palestraSelecionada.id
-        const docRef = doc(collection(db, 'palestras'), palestraSelecionada.id);
+        const docRef = doc(collection(db, 'palestras'), idEvento);
         await updateDoc(docRef, palestraData);
         // Atualiza no Google Sheets
         try {
@@ -193,11 +226,10 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         }
       } else {
         // Cria nova palestra com id único para o Google Sheets
-        const uuid = uuidv4();
-        const novaPalestra = { ...form, id: uuid };
+        const novaPalestra = { ...form, id: idEvento, documentos: documentosUrls };
 
-        const docRef = doc(db, 'palestras', uuid); // Cria uma referência com ID explícito
-        await setDoc(docRef, { ...form, id: uuid }); // Usa setDoc em vez de addDoc
+        const docRef = doc(db, 'palestras', idEvento); // Cria uma referência com ID explícito
+        await setDoc(docRef, novaPalestra); // Usa setDoc em vez de addDoc
         // Envia para o Google Sheets
         try {
             const response = await fetch(`${API_URL}/add-palestra`, {
@@ -249,6 +281,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         pagamentoContratante: '',
         valorFinalRecebido: 0,
         custoFinal: 0,
+        documentos: [],
         agendado: false,
       })
       
@@ -374,6 +407,20 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
           />
         </div>
       )}
+
+      <div className={styles.field}>
+        <label>Documentos:</label>
+        <input type="file" multiple onChange={handleFileChange} />
+        {form.documentos && form.documentos.length > 0 && (
+          <ul className={styles.fileList}>
+            {form.documentos.map((url, idx) => (
+              <li key={idx}>
+                <a href={url} target="_blank" rel="noopener noreferrer">Arquivo {idx + 1}</a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       </>
       )}
