@@ -139,7 +139,21 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    setSelectedFiles(files)
+    // Permite adicionar novos arquivos sem perder os já selecionados
+    setSelectedFiles(prev => [...prev, ...files])
+    // Limpa o valor do input para possibilitar a mesma seleção novamente
+    e.target.value = ''
+  }
+
+  const handleRemoveFile = (index: number, existing = false) => {
+    if (existing) {
+      setForm(prev => ({
+        ...prev,
+        documentos: prev.documentos.filter((_, i) => i !== index)
+      }))
+    } else {
+      setSelectedFiles(prev => prev.filter((_, i) => i !== index))
+    }
   }
 
   const validateForm = (): boolean => {
@@ -381,13 +395,30 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         <input type="file" multiple onChange={handleFileChange} />
         {(selectedFiles.length > 0 || form.documentos.length > 0) && (
           <ul className={styles.fileList}>
-            {selectedFiles.length > 0
-              ? selectedFiles.map(file => (
-                  <li key={file.name}>{file.name}</li>
-                ))
-              : form.documentos.map(url => (
-                  <li key={url}>{url.split('/').pop()}</li>
-                ))}
+            {form.documentos.map((url, idx) => (
+              <li key={url}>
+                {url.split('/').pop()}
+                <button
+                  type="button"
+                  className={styles.removeButton}
+                  onClick={() => handleRemoveFile(idx, true)}
+                >
+                  Remover
+                </button>
+              </li>
+            ))}
+            {selectedFiles.map((file, idx) => (
+              <li key={file.name + idx}>
+                {file.name}
+                <button
+                  type="button"
+                  className={styles.removeButton}
+                  onClick={() => handleRemoveFile(idx)}
+                >
+                  Remover
+                </button>
+              </li>
+            ))}
           </ul>
         )}
       </div>
