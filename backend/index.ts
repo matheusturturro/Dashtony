@@ -22,7 +22,7 @@ const auth = new google.auth.GoogleAuth({
 });
 
 const spreadsheetId = process.env.SPREADSHEET_ID!;
-const range = "Página1!A:AH";
+const range = "Página1!A:AI";
 
 // Function to initialize sheet headers
 async function initializeSheetHeaders() {
@@ -33,7 +33,7 @@ async function initializeSheetHeaders() {
     // Sempre atualiza os cabeçalhos para garantir que todos estejam presentes
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: "Página1!A1:AH1",
+      range: "Página1!A1:AI1",
       valueInputOption: "RAW",
       requestBody: {
         values: [[
@@ -70,6 +70,7 @@ async function initializeSheetHeaders() {
           "Pagamento Contratante",
           "Valor Final Recebido",
           "Custo Final",
+          "Arquivos",
           "Agendado"
         ]]
       }
@@ -143,6 +144,7 @@ app.post("/add-palestra", (async (req: Request, res: Response): Promise<void> =>
             palestra.pagamentoContratante,
             palestra.valorFinalRecebido,
             palestra.custoFinal,
+            (palestra.documentos || []).join(';'),
             "Não" // Exibe "Não" na planilha quando false
           ]]
         }
@@ -249,7 +251,7 @@ app.post("/update-palestra", (async (req: Request, res: Response): Promise<void>
       }
       
       // Atualiza exatamente a linha correta na planilha
-      const updateRange = `Página1!A${updateRow}:AH${updateRow}`;
+      const updateRange = `Página1!A${updateRow}:AI${updateRow}`;
       console.log('Preparando para atualizar a range:', updateRange);
       console.log('Atualizando linha:', updateRow, 'com ID:', palestra.id);
       console.log('Nome da palestra sendo atualizada:', palestra.nome);
@@ -292,6 +294,7 @@ app.post("/update-palestra", (async (req: Request, res: Response): Promise<void>
             palestra.pagamentoContratante,
             palestra.valorFinalRecebido,
             palestra.custoFinal,
+            (palestra.documentos || []).join(';'),
             palestra.agendado ? "Sim" : "Não" // Exibe "Sim" ou "Não" na planilha
           ]]
         }
