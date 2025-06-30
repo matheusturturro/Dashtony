@@ -1,7 +1,8 @@
 // src/components/CadastroPalestra.tsx
 import { useState, FormEvent, useEffect } from 'react'
-import { db } from '../firebase'
+import { db, storage } from '../firebase'
 import { collection, updateDoc, doc } from 'firebase/firestore'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { Palestra } from '../types/Palestra'
 import styles from './CadastroPalestra.module.css'
 import {v4 as uuidv4} from "uuid";
