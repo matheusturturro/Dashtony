@@ -10,6 +10,7 @@ Fluxo completo do dado: **Aplicação → Firebase → Google Sheets → Google 
 - Listagem e atualização do status de cada palestra
 - Gestão de pagamentos e contratantes
 - Registro de hospedagem e notas fiscais
+- Upload de documentos relacionados às palestras
 
 ## Como Executar
 
