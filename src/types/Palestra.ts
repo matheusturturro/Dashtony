@@ -9,6 +9,7 @@ export interface Palestra {
     dataMarcada: string
     horarioEvento: string
     local: string
+    resumo: string
     observacoes: string
     infoIda: string
     infoRetorno: string

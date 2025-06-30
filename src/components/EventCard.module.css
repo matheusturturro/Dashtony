@@ -104,3 +104,18 @@
   background: #ef4444;
   color: white;
 }
+
+.resumo {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  overflow-y: auto;
+}
+
+.card:hover .resumo {
+  display: block;
+}
