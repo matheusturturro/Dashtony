@@ -7,7 +7,9 @@ import styles from './CadastroPalestra.module.css'
 import {v4 as uuidv4} from "uuid";
 
 import { setDoc } from 'firebase/firestore'; // Adicione esta importação
-const API_URL = import.meta.env.VITE_BACKEND_URL || ""
+// Use URL do backend definida nas variáveis de ambiente ou assuma localhost
+// para evitar erros 404 quando não houver configuração específica
+const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'
 interface CadastroPalestraProps {
   palestraSelecionada: Palestra | null
   onPalestraSalva: () => void
@@ -49,8 +51,11 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
     pagamentoContratante: '',
     valorFinalRecebido: 0,
     custoFinal: 0,
+    documentos: [],
     agendado: false,
   })
+
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([])
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -94,8 +99,10 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         pagamentoContratante: '',
         valorFinalRecebido: 0,
         custoFinal: 0,
+        documentos: [],
         agendado: false,
       })
+      setSelectedFiles([])
     }
   }, [palestraSelecionada])
 
@@ -128,6 +135,15 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
     setForm(prev => ({
       ...prev,
       [name]: type === 'checkbox' ? target.checked : value
+    }))
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    setSelectedFiles(files)
+    setForm(prev => ({
+      ...prev,
+      documentos: files.map(f => f.name)
     }))
   }
 
@@ -249,8 +265,10 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         pagamentoContratante: '',
         valorFinalRecebido: 0,
         custoFinal: 0,
+        documentos: [],
         agendado: false,
       })
+      setSelectedFiles([])
       
       // Notifica o componente pai
       onPalestraSalva()
@@ -348,6 +366,22 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       <div className={styles.field}>
         <label>Observações:</label>
         <textarea name="observacoes" value={form.observacoes} onChange={handleChange} />
+      </div>
+
+      <div className={styles.field}>
+        <label>Anexar Documentos:</label>
+        <input type="file" multiple onChange={handleFileChange} />
+        {(selectedFiles.length > 0 || form.documentos.length > 0) && (
+          <ul className={styles.fileList}>
+            {selectedFiles.length > 0
+              ? selectedFiles.map(file => (
+                  <li key={file.name}>{file.name}</li>
+                ))
+              : form.documentos.map(name => (
+                  <li key={name}>{name}</li>
+                ))}
+          </ul>
+        )}
       </div>
 
       <div className={styles.field}>
