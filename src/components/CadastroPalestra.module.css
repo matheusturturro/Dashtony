@@ -161,3 +161,12 @@
   background: #fb923c;
   color: white;
 }
+
+.fileList {
+  margin-top: 0.5rem;
+  padding-left: 1rem;
+}
+
+.fileList li {
+  list-style: disc;
+}

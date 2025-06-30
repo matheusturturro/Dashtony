@@ -1,15 +1,26 @@
-import express, { Request, Response, RequestHandler } from "express";
+import express, { Request, Response, RequestHandler, Express } from "express";
 import cors from "cors";
 import { google, Auth } from "googleapis";
 import { Palestra } from "./types/Palestra";
 import path from "path";
 import dotenv from "dotenv";
+import admin from "firebase-admin";
+import multer from "multer";
+import { v4 as uuidv4 } from "uuid";
 dotenv.config({ path: path.resolve(__dirname, "../.env") });
   
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const upload = multer({ storage: multer.memoryStorage() });
+
+admin.initializeApp({
+  credential: admin.credential.applicationDefault(),
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || process.env.VITE_FIREBASE_STORAGE_BUCKET,
+});
+const bucket = admin.storage().bucket();
 
 const credentialsPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 const credentialsJson = process.env.GOOGLE_CREDENTIALS;
@@ -22,7 +33,7 @@ const auth = new google.auth.GoogleAuth({
 });
 
 const spreadsheetId = process.env.SPREADSHEET_ID!;
-const range = "Página1!A:AH";
+const range = "Página1!A:AI";
 
 // Function to initialize sheet headers
 async function initializeSheetHeaders() {
@@ -33,7 +44,7 @@ async function initializeSheetHeaders() {
     // Sempre atualiza os cabeçalhos para garantir que todos estejam presentes
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range: "Página1!A1:AH1",
+      range: "Página1!A1:AI1",
       valueInputOption: "RAW",
       requestBody: {
         values: [[
@@ -70,6 +81,7 @@ async function initializeSheetHeaders() {
           "Pagamento Contratante",
           "Valor Final Recebido",
           "Custo Final",
+          "Arquivos",
           "Agendado"
         ]]
       }
@@ -143,6 +155,7 @@ app.post("/add-palestra", (async (req: Request, res: Response): Promise<void> =>
             palestra.pagamentoContratante,
             palestra.valorFinalRecebido,
             palestra.custoFinal,
+            (palestra.documentos || []).join(';'),
             "Não" // Exibe "Não" na planilha quando false
           ]]
         }
@@ -154,6 +167,34 @@ app.post("/add-palestra", (async (req: Request, res: Response): Promise<void> =>
     res.status(500).json({ message: "Erro ao adicionar palestra.", error: String(error) });
   }
 }) as RequestHandler);
+
+app.post("/upload-document", upload.array("files"), async (req: Request, res: Response) => {
+  try {
+    const idEvento = req.body.idEvento;
+    const files = req.files as Express.Multer.File[];
+    if (!files || files.length === 0) {
+      res.status(400).json({ message: "Nenhum arquivo enviado" });
+      return;
+    }
+    const urls: string[] = [];
+    for (const file of files) {
+      const filePath = `palestras/${idEvento}/${file.originalname}`;
+      const token = uuidv4();
+      await bucket.file(filePath).save(file.buffer, {
+        metadata: {
+          contentType: file.mimetype,
+          metadata: { firebaseStorageDownloadTokens: token },
+        },
+      });
+      const url = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(filePath)}?alt=media&token=${token}`;
+      urls.push(url);
+    }
+    res.json({ urls });
+  } catch (err) {
+    console.error("Erro no upload:", err);
+    res.status(500).json({ message: "Erro ao enviar arquivo", error: String(err) });
+  }
+});
 
 app.post("/update-palestra", (async (req: Request, res: Response): Promise<void> => {
   try {
@@ -249,7 +290,7 @@ app.post("/update-palestra", (async (req: Request, res: Response): Promise<void>
       }
       
       // Atualiza exatamente a linha correta na planilha
-      const updateRange = `Página1!A${updateRow}:AH${updateRow}`;
+      const updateRange = `Página1!A${updateRow}:AI${updateRow}`;
       console.log('Preparando para atualizar a range:', updateRange);
       console.log('Atualizando linha:', updateRow, 'com ID:', palestra.id);
       console.log('Nome da palestra sendo atualizada:', palestra.nome);
@@ -292,6 +333,7 @@ app.post("/update-palestra", (async (req: Request, res: Response): Promise<void>
             palestra.pagamentoContratante,
             palestra.valorFinalRecebido,
             palestra.custoFinal,
+            (palestra.documentos || []).join(';'),
             palestra.agendado ? "Sim" : "Não" // Exibe "Sim" ou "Não" na planilha
           ]]
         }
