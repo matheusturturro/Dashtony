@@ -168,3 +168,11 @@
   padding-left: 1.5rem;
   color: #333;
 }
+
+.removeFileBtn {
+  margin-left: 0.5rem;
+  background: none;
+  border: none;
+  color: #dc3545;
+  cursor: pointer;
+}

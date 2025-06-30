@@ -1,13 +1,14 @@
 // src/components/CadastroPalestra.tsx
 import { useState, FormEvent, useEffect } from 'react'
-import { db } from '../firebase'
+import { db, storage } from '../firebase'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { collection, updateDoc, doc } from 'firebase/firestore'
 import { Palestra } from '../types/Palestra'
 import styles from './CadastroPalestra.module.css'
 import {v4 as uuidv4} from "uuid";
 
 import { setDoc } from 'firebase/firestore'; // Adicione esta importação
-const API_URL = import.meta.env.VITE_BACKEND_URL || ""
+const API_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'
 interface CadastroPalestraProps {
   palestraSelecionada: Palestra | null
   onPalestraSalva: () => void
@@ -138,10 +139,17 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    setSelectedFiles(files)
+    setSelectedFiles(prev => [...prev, ...files])
+  }
+
+  const removeSelectedFile = (index: number) => {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index))
+  }
+
+  const removeExistingDocumento = (index: number) => {
     setForm(prev => ({
       ...prev,
-      documentos: files.map(f => f.name)
+      documentos: prev.documentos.filter((_, i) => i !== index),
     }))
   }
 
@@ -176,16 +184,28 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     setError(null)
-    
+
     if (!validateForm()) {
       return
     }
 
     setLoading(true)
     try {
+      let uploadedUrls: string[] = []
+      if (selectedFiles.length > 0) {
+        uploadedUrls = await Promise.all(
+          selectedFiles.map(async file => {
+            const fileRef = ref(storage, `documentos/${uuidv4()}-${file.name}`)
+            await uploadBytes(fileRef, file)
+            return await getDownloadURL(fileRef)
+          })
+        )
+      }
+
       if (palestraSelecionada) {
         // Atualiza palestra existente (mantém o id atual)
-        const palestraData = { ...form, id: palestraSelecionada.id };
+        const documentosAtualizados = [...form.documentos, ...uploadedUrls]
+        const palestraData = { ...form, documentos: documentosAtualizados, id: palestraSelecionada.id };
         console.log('ID enviado para edição:', palestraData.id);
         // Usa o id do Firestore salvo em palestraSelecionada.id
         const docRef = doc(collection(db, 'palestras'), palestraSelecionada.id);
@@ -208,10 +228,11 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       } else {
         // Cria nova palestra com id único para o Google Sheets
         const uuid = uuidv4();
-        const novaPalestra = { ...form, id: uuid };
+        const documentosAtualizados = [...form.documentos, ...uploadedUrls]
+        const novaPalestra = { ...form, documentos: documentosAtualizados, id: uuid };
 
         const docRef = doc(db, 'palestras', uuid); // Cria uma referência com ID explícito
-        await setDoc(docRef, { ...form, id: uuid }); // Usa setDoc em vez de addDoc
+        await setDoc(docRef, novaPalestra); // Usa setDoc em vez de addDoc
         // Envia para o Google Sheets
         try {
             const response = await fetch(`${API_URL}/add-palestra`, {
@@ -371,13 +392,30 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         <input type="file" multiple onChange={handleFileChange} />
         {(selectedFiles.length > 0 || form.documentos.length > 0) && (
           <ul className={styles.fileList}>
-            {selectedFiles.length > 0
-              ? selectedFiles.map(file => (
-                  <li key={file.name}>{file.name}</li>
-                ))
-              : form.documentos.map(name => (
-                  <li key={name}>{name}</li>
-                ))}
+            {form.documentos.map((url, idx) => (
+              <li key={url}>
+                {url.split('/').pop()}
+                <button
+                  type="button"
+                  className={styles.removeFileBtn}
+                  onClick={() => removeExistingDocumento(idx)}
+                >
+                  Remover
+                </button>
+              </li>
+            ))}
+            {selectedFiles.map((file, idx) => (
+              <li key={file.name + idx}>
+                {file.name}
+                <button
+                  type="button"
+                  className={styles.removeFileBtn}
+                  onClick={() => removeSelectedFile(idx)}
+                >
+                  Remover
+                </button>
+              </li>
+            ))}
           </ul>
         )}
       </div>
