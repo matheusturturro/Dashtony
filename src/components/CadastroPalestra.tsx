@@ -26,6 +26,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
     horarioEvento: '',
     local: '',
     observacoes: '',
+    resumo: '',
     infoIda: '',
     infoRetorno: '',
     humanoide: false,
@@ -71,6 +72,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         horarioEvento: '',
         local: '',
         observacoes: '',
+        resumo: '',
         infoIda: '',
         infoRetorno: '',
         humanoide: false,
@@ -226,6 +228,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         horarioEvento: '',
         local: '',
         observacoes: '',
+        resumo: '',
         infoIda: '',
         infoRetorno: '',
         humanoide: false,
@@ -348,6 +351,15 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       <div className={styles.field}>
         <label>Observações:</label>
         <textarea name="observacoes" value={form.observacoes} onChange={handleChange} />
+      </div>
+      <div className={styles.field}>
+        <label>Resumo:</label>
+        <textarea
+          name="resumo"
+          value={form.resumo}
+          onChange={handleChange}
+          placeholder="Escreva um breve resumo da palestra"
+        />
       </div>
 
       <div className={styles.field}>

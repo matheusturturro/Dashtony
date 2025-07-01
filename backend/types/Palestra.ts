@@ -10,6 +10,7 @@ export interface Palestra {
     horarioEvento: string
     local: string
     observacoes: string
+    resumo: string
     infoIda: string
     infoRetorno: string
     hospedagemInclusa: boolean

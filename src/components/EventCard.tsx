@@ -39,6 +39,9 @@ export default function EventCard({ event, onEditar, onExcluir, onDetalhes }: Ev
         <div>R$ {event.valorVenda}</div>
         <div className={styles.lucro}>Lucro: R$ {event.lucroFinal}</div>
       </div>
+      {event.resumo && (
+        <p className={styles.resumo}>{event.resumo}</p>
+      )}
       <div className={styles.actions}>
         <button className={styles.details} onClick={() => onDetalhes(event)}>👁️ Ver Detalhes</button>
         <button className={styles.edit} onClick={() => onEditar(event)}>✏️ Editar</button>
