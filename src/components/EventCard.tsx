@@ -20,6 +20,19 @@ function badgeColor(tipo: string) {
   }
 }
 
+function statusClass(status: string) {
+  switch (status.toLowerCase()) {
+    case 'cancelada':
+      return styles.statusCancelada
+    case 'agendada':
+      return styles.statusAgendada
+    case 'confirmada':
+      return styles.statusConfirmada
+    default:
+      return styles.status
+  }
+}
+
 export default function EventCard({ event, onEditar, onExcluir, onDetalhes, gray }: EventCardProps) {
   const data = new Date(event.dataMarcada + 'T12:00:00')
   const future = data >= new Date()
@@ -36,7 +49,7 @@ export default function EventCard({ event, onEditar, onExcluir, onDetalhes, gray
         <h3>{event.nome}</h3>
         <span className={`${styles.badge} ${badgeColor(event.tipo)}`}>{event.tipo}</span>
         {event.status && (
-          <span className={`${styles.badge} ${styles.status}`}>{event.status}</span>
+          <span className={`${styles.badge} ${statusClass(event.status)}`}>{event.status}</span>
         )}
         {event.agendado && (
           <span className={`${styles.badge} ${styles.agendado}`}>Agendado</span>

@@ -319,7 +319,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
           <option value="">Selecione</option>
           <option value="Cancelada">Cancelada</option>
           <option value="Agendada">Agendada</option>
-          <option value="Concluída">Confirmada</option>
+          <option value="Confirmada">Confirmada</option>
         </select>
       </div>
       <div className={styles.field}>

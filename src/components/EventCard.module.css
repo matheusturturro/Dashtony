@@ -48,6 +48,9 @@
 .proximo { background: #22c55e; }
 .passado { background: #6b7280; }
 .status { background: #f59e0b; }
+.statusCancelada { background: #ef4444; }
+.statusAgendada { background: #f59e0b; }
+.statusConfirmada { background: #22c55e; }
 
 .info {
   list-style: none;

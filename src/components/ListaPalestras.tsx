@@ -86,10 +86,10 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
 
 
   function formatMonthYear(month: number, year: number) {
-    return new Date(year, month, 1).toLocaleDateString('pt-BR', {
-      month: 'long',
-      year: 'numeric'
-    })
+    const date = new Date(year, month, 1)
+    const monthName = date.toLocaleDateString('pt-BR', { month: 'long' })
+    const yearName = date.toLocaleDateString('pt-BR', { year: 'numeric' })
+    return { monthName, yearName }
   }
 
   const months: { month: number; year: number; eventos: Palestra[] }[] = []
@@ -144,6 +144,7 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
       ) : (
         <div className={filterLoading ? styles.fade : ''}>
           {months.map(({ month, year, eventos }) => {
+            const { monthName, yearName } = formatMonthYear(month, year)
             let gray = false
             if (eventos.length > 0) {
               gray = coloredIndex % 2 === 1
@@ -154,7 +155,9 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
                 key={`${year}-${month}`}
                 className={styles.monthSection}
               >
-                <h2 className={styles.monthTitle}>{formatMonthYear(month, year)}</h2>
+                <h2 className={styles.monthTitle}>
+                  <span className={styles.monthName}>{monthName}</span> {yearName}
+                </h2>
                 {eventos.length === 0 ? (
                   <p className={styles.emptyMonth}>nada marcado</p>
                 ) : (
