@@ -115,6 +115,8 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
     months.push({ month: next.getMonth(), year: next.getFullYear(), eventos: [] })
   }
 
+  let coloredIndex = 0
+
 
   return (
     <div className={styles.container}>
@@ -141,29 +143,37 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
         <div className={styles.loading}>Carregando...</div>
       ) : (
         <div className={filterLoading ? styles.fade : ''}>
-          {months.map(({ month, year, eventos }) => (
-            <div
-              key={`${year}-${month}`}
-              className={styles.monthSection}
-            >
-            <h2 className={styles.monthTitle}>{formatMonthYear(month, year)}</h2>
-            {eventos.length === 0 ? (
-              <p className={styles.emptyMonth}>nada marcado</p>
-            ) : (
-              <div className={styles.grid}>
-                {eventos.map(p => (
-                  <EventCard
-                    key={p.id}
-                    event={p}
-                    onEditar={onEditar}
-                    onExcluir={handleExcluirClick}
-                    onDetalhes={onEditar}
-                  />
-                ))}
+          {months.map(({ month, year, eventos }) => {
+            let gray = false
+            if (eventos.length > 0) {
+              gray = coloredIndex % 2 === 1
+              coloredIndex++
+            }
+            return (
+              <div
+                key={`${year}-${month}`}
+                className={styles.monthSection}
+              >
+                <h2 className={styles.monthTitle}>{formatMonthYear(month, year)}</h2>
+                {eventos.length === 0 ? (
+                  <p className={styles.emptyMonth}>nada marcado</p>
+                ) : (
+                  <div className={styles.grid}>
+                    {eventos.map(p => (
+                      <EventCard
+                        key={p.id}
+                        event={p}
+                        onEditar={onEditar}
+                        onExcluir={handleExcluirClick}
+                        onDetalhes={onEditar}
+                        gray={gray}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-            </div>
-          ))}
+            )
+          })}
         </div>
       )}
 

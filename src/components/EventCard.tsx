@@ -6,6 +6,7 @@ interface EventCardProps {
   onEditar: (p: Palestra) => void
   onExcluir: (p: Palestra) => void
   onDetalhes: (p: Palestra) => void
+  gray?: boolean
 }
 
 function badgeColor(tipo: string) {
@@ -19,11 +20,18 @@ function badgeColor(tipo: string) {
   }
 }
 
-export default function EventCard({ event, onEditar, onExcluir, onDetalhes }: EventCardProps) {
+export default function EventCard({ event, onEditar, onExcluir, onDetalhes, gray }: EventCardProps) {
   const data = new Date(event.dataMarcada + 'T12:00:00')
   const future = data >= new Date()
+  const formattedDate = data
+    .toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    })
+    .replace(/\//g, '-')
   return (
-    <div className={styles.card}>
+    <div className={`${styles.card} ${gray ? styles.gray : ''}`}>
       <div className={styles.header}>
         <h3>{event.nome}</h3>
         <span className={`${styles.badge} ${badgeColor(event.tipo)}`}>{event.tipo}</span>
@@ -31,7 +39,12 @@ export default function EventCard({ event, onEditar, onExcluir, onDetalhes }: Ev
         <span className={`${styles.badge} ${future ? styles.proximo : styles.passado}`}>{future ? 'Próximo' : 'Passado'}</span>
       </div>
       <ul className={styles.info}>
-        <li><span className={styles.icon}>📅</span>{event.dataMarcada} {event.horarioEvento}</li>
+        <li>
+          <span className={styles.icon}>📅</span>
+          {formattedDate}
+          <span className={styles.icon}>🕒</span>
+          {event.horarioEvento}
+        </li>
         <li><span className={styles.icon}>📍</span>{event.local}</li>
         <li><span className={styles.icon}>🏷️</span>{event.tipo}</li>
       </ul>
