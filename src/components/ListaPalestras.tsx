@@ -23,10 +23,21 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
   const [monthFilter, setMonthFilter] = useState('')
   const [filterLoading, setFilterLoading] = useState(false)
 
+  function normalizeStatus(status: string) {
+    const s = status?.toLowerCase()
+    if (s === 'cancelada') return 'Cancelada'
+    if (s === 'agendada') return 'Agendada'
+    if (s === 'confirmada') return 'Confirmada'
+    return status
+  }
+
   useEffect(() => {
     const q = query(collection(db, 'palestras'), orderBy('dataMarcada', 'asc'))
     const unsubscribe = onSnapshot(q, (snapshot) => {
-      const data = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Palestra[]
+      const data = snapshot.docs.map(doc => {
+        const d = doc.data() as Palestra
+        return { id: doc.id, ...d, status: normalizeStatus(d.status) }
+      }) as Palestra[]
       setPalestras(data)
       setLoading(false)
     })
@@ -87,7 +98,9 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
 
   function formatMonthYear(month: number, year: number) {
     const date = new Date(year, month, 1)
-    const monthName = date.toLocaleDateString('pt-BR', { month: 'long' })
+    const monthName = date
+      .toLocaleDateString('pt-BR', { month: 'long' })
+      .toUpperCase()
     const yearName = date.toLocaleDateString('pt-BR', { year: 'numeric' })
     return { monthName, yearName }
   }
