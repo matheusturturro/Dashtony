@@ -35,7 +35,12 @@ export default function EventCard({ event, onEditar, onExcluir, onDetalhes, gray
       <div className={styles.header}>
         <h3>{event.nome}</h3>
         <span className={`${styles.badge} ${badgeColor(event.tipo)}`}>{event.tipo}</span>
-        {event.agendado && <span className={`${styles.badge} ${styles.agendado}`}>Agendado</span>}
+        {event.status && (
+          <span className={`${styles.badge} ${styles.status}`}>{event.status}</span>
+        )}
+        {event.agendado && (
+          <span className={`${styles.badge} ${styles.agendado}`}>Agendado</span>
+        )}
         <span className={`${styles.badge} ${future ? styles.proximo : styles.passado}`}>{future ? 'Próximo' : 'Passado'}</span>
       </div>
       <ul className={styles.info}>
@@ -46,7 +51,6 @@ export default function EventCard({ event, onEditar, onExcluir, onDetalhes, gray
           {event.horarioEvento}
         </li>
         <li><span className={styles.icon}>📍</span>{event.local}</li>
-        <li><span className={styles.icon}>🏷️</span>{event.tipo}</li>
       </ul>
       <div className={styles.financeiro}>
         <div>R$ {event.valorVenda}</div>
