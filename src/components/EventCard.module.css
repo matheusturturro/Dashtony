@@ -47,6 +47,7 @@
 .agendado { background: #06b6d4; }
 .proximo { background: #22c55e; }
 .passado { background: #6b7280; }
+.status { background: #f59e0b; }
 
 .info {
   list-style: none;

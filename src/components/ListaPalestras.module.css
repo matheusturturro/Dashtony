@@ -85,9 +85,10 @@
 
 .monthTitle {
   text-transform: capitalize;
-  margin: 0 0 0.5rem 0;
-  color: #6b7280;
-  font-weight: 500;
+  margin: 0 0 0.75rem 0;
+  color: #1f2937;
+  font-weight: 600;
+  font-size: 1.25rem;
 }
 
 .emptyMonth {
