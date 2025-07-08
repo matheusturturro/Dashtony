@@ -69,13 +69,15 @@ export default function EventCard({ event, onEditar, onExcluir, onDetalhes, gray
         <div>R$ {event.valorVenda}</div>
         <div className={styles.lucro}>Lucro: R$ {event.lucroFinal}</div>
       </div>
-      {event.resumo && (
-        <p className={styles.resumo}>{event.resumo}</p>
-      )}
-      <div className={styles.actions}>
-        <button className={styles.details} onClick={() => onDetalhes(event)}>👁️ Ver Detalhes</button>
-        <button className={styles.edit} onClick={() => onEditar(event)}>✏️ Editar</button>
-        <button className={styles.delete} onClick={() => onExcluir(event)}>🗑️ Excluir</button>
+      <div className={styles.extra}>
+        {event.resumo && (
+          <p className={styles.resumo}>{event.resumo}</p>
+        )}
+        <div className={styles.actions}>
+          <button className={styles.details} onClick={() => onDetalhes(event)}>👁️ Ver Detalhes</button>
+          <button className={styles.edit} onClick={() => onEditar(event)}>✏️ Editar</button>
+          <button className={styles.delete} onClick={() => onExcluir(event)}>🗑️ Excluir</button>
+        </div>
       </div>
     </div>
   )
