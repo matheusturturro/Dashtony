@@ -10,9 +10,10 @@ import styles from './ListaPalestras.module.css'
 
 interface ListaPalestrasProps {
   onEditar: (p: Palestra) => void
+  onDetalhes: (p: Palestra) => void
 }
 
-export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
+export default function ListaPalestras({ onEditar, onDetalhes }: ListaPalestrasProps) {
   const [palestras, setPalestras] = useState<Palestra[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -181,7 +182,7 @@ export default function ListaPalestras({ onEditar }: ListaPalestrasProps) {
                         event={p}
                         onEditar={onEditar}
                         onExcluir={handleExcluirClick}
-                        onDetalhes={onEditar}
+                        onDetalhes={onDetalhes}
                         gray={gray}
                       />
                     ))}
