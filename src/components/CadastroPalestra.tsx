@@ -13,9 +13,11 @@ interface CadastroPalestraProps {
   onPalestraSalva: () => void
   isOpen: boolean
   onClose: () => void
+  modo?: 'editar' | 'detalhes'
 }
 
-export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva, isOpen, onClose }: CadastroPalestraProps) {
+export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva, isOpen, onClose, modo = 'editar' }: CadastroPalestraProps) {
+  const readOnly = modo === 'detalhes'
   const [form, setForm] = useState<Palestra>({
     tipo: 'palestra',
     status: '',
@@ -270,8 +272,17 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <button className={styles.close} onClick={onClose}>×</button>
-        <form className={`${styles.form} ${palestraSelecionada ? styles.editing : ''}`} onSubmit={handleSubmit}>
-      <h2>{palestraSelecionada ? 'Editar Palestra' : 'Nova Palestra'}</h2>
+        <form
+          className={`${styles.form} ${palestraSelecionada ? styles.editing : ''}`}
+          onSubmit={readOnly ? e => e.preventDefault() : handleSubmit}
+        >
+      <h2>
+        {modo === 'detalhes'
+          ? 'Detalhes da Palestra'
+          : palestraSelecionada
+          ? 'Editar Palestra'
+          : 'Nova Palestra'}
+      </h2>
 
       <nav className={styles.tabs}>
         <button type="button" className={tab === 'basico' ? styles.activeTab : ''} onClick={() => setTab('basico')}>Básico</button>
@@ -294,28 +305,30 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       </div>
       <div className={styles.field}>
         <label>Nome: <span className={styles.required}>*</span></label>
-        <input 
-          type="text" 
-          name="nome" 
-          value={form.nome} 
-          onChange={handleChange} 
+        <input
+          type="text"
+          name="nome"
+          value={form.nome}
+          onChange={handleChange}
           required
           placeholder="Digite o nome da palestra"
+          disabled={readOnly}
         />
       </div>
       <div className={styles.field}>
         <label>Data Marcada: <span className={styles.required}>*</span></label>
-        <input 
-          type="date" 
-          name="dataMarcada" 
-          value={form.dataMarcada} 
+        <input
+          type="date"
+          name="dataMarcada"
+          value={form.dataMarcada}
           onChange={handleChange}
           required
+          disabled={readOnly}
         />
       </div>
       <div className={styles.field}>
         <label>Status:</label>
-        <select name="status" value={form.status} onChange={handleChange}>
+        <select name="status" value={form.status} onChange={handleChange} disabled={readOnly}>
           <option value="">Selecione</option>
           <option value="Cancelada">Cancelada</option>
           <option value="Agendada">Agendada</option>
@@ -324,33 +337,35 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       </div>
       <div className={styles.field}>
         <label>Lucro Final:</label>
-        <input 
-          type="number" 
-          name="lucroFinal" 
-          value={form.lucroFinal || ''} 
-          onChange={handleChange} 
+        <input
+          type="number"
+          name="lucroFinal"
+          value={form.lucroFinal || ''}
+          onChange={handleChange}
           placeholder="Digite o lucro final"
+          disabled={readOnly}
         />
       </div>
 
       {/* Detalhes do Evento */}
       <div className={styles.field}>
         <label>Local:</label>
-        <input 
-          type="text" 
-          name="local" 
-          value={form.local} 
+        <input
+          type="text"
+          name="local"
+          value={form.local}
           onChange={handleChange}
           placeholder="Digite o local do evento"
+          disabled={readOnly}
         />
       </div>
       <div className={styles.field}>
         <label>Horário do Evento:</label>
-        <input type="time" name="horarioEvento" value={form.horarioEvento} onChange={handleChange} />
+        <input type="time" name="horarioEvento" value={form.horarioEvento} onChange={handleChange} disabled={readOnly} />
       </div>
       <div className={styles.field}>
         <label>Observações:</label>
-        <textarea name="observacoes" value={form.observacoes} onChange={handleChange} />
+        <textarea name="observacoes" value={form.observacoes} onChange={handleChange} readOnly={readOnly} />
       </div>
       <div className={styles.field}>
         <label>Resumo:</label>
@@ -359,6 +374,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
           value={form.resumo}
           onChange={handleChange}
           placeholder="Escreva um breve resumo da palestra"
+          readOnly={readOnly}
         />
       </div>
 
@@ -370,6 +386,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
             name="robo"
             checked={form.robo}
             onChange={handleChange}
+            disabled={readOnly}
           />
           <span>Sim</span>
         </div>
@@ -383,6 +400,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
             value={form.observacoesRobo}
             onChange={handleChange}
             placeholder="Digite as observações sobre o robô"
+            readOnly={readOnly}
           />
         </div>
       )}
@@ -395,20 +413,21 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         <>
       <div className={styles.field}>
         <label>Informações de Ida:</label>
-        <input type="date" name="infoIda" value={form.infoIda} onChange={handleChange} />
+        <input type="date" name="infoIda" value={form.infoIda} onChange={handleChange} disabled={readOnly} />
       </div>
       <div className={styles.field}>
         <label>Informações de Retorno:</label>
-        <input type="date" name="infoRetorno" value={form.infoRetorno} onChange={handleChange} />
+        <input type="date" name="infoRetorno" value={form.infoRetorno} onChange={handleChange} disabled={readOnly} />
       </div>
       <div className={styles.field}>
         <label>Hospedagem Inclusa:</label>
         <div className={styles.checkboxContainer}>
-          <input 
-            type="checkbox" 
-            name="hospedagemInclusa" 
-            checked={form.hospedagemInclusa} 
-            onChange={handleChange} 
+          <input
+            type="checkbox"
+            name="hospedagemInclusa"
+            checked={form.hospedagemInclusa}
+            onChange={handleChange}
+            disabled={readOnly}
           />
           <span>Sim</span>
         </div>
@@ -417,11 +436,12 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       {form.hospedagemInclusa && (
         <div className={styles.field}>
           <label>Observações da Hospedagem:</label>
-          <textarea 
-            name="enderecoHospedagem" 
-            value={form.enderecoHospedagem} 
+          <textarea
+            name="enderecoHospedagem"
+            value={form.enderecoHospedagem}
             onChange={handleChange}
             placeholder="Digite as observações sobre a hospedagem"
+            readOnly={readOnly}
           />
         </div>
       )}
@@ -429,11 +449,12 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       <div className={styles.field}>
         <label>Passagem Inclusa:</label>
         <div className={styles.checkboxContainer}>
-          <input 
-            type="checkbox" 
-            name="passagem" 
-            checked={form.passagem} 
-            onChange={handleChange} 
+          <input
+            type="checkbox"
+            name="passagem"
+            checked={form.passagem}
+            onChange={handleChange}
+            disabled={readOnly}
           />
           <span>Sim</span>
         </div>
@@ -447,6 +468,7 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
             value={form.enderecopassagem}
             onChange={handleChange}
             placeholder="Digite as observações sobre a passagem"
+            readOnly={readOnly}
           />
         </div>
       )}
@@ -458,88 +480,93 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         <>
       <div className={styles.field}>
         <label>Vendida Por:</label>
-        <input type="text" name="vendidaPor" value={form.vendidaPor} onChange={handleChange} />
+        <input type="text" name="vendidaPor" value={form.vendidaPor} onChange={handleChange} disabled={readOnly} />
       </div>
       <div className={styles.field}>
         <label>Valor de Venda da Palestra:</label>
-        <input 
-          type="number" 
-          name="valorVenda" 
-          value={form.valorVenda || ''} 
-          onChange={handleChange} 
+        <input
+          type="number"
+          name="valorVenda"
+          value={form.valorVenda || ''}
+          onChange={handleChange}
           placeholder="Digite o valor"
+          disabled={readOnly}
         />
       </div>
       <div className={styles.field}>
         <label>Valor da Comissão (%):</label>
-        <input 
-          type="number" 
-          name="valorComissao" 
-          value={form.valorComissao || ''} 
-          onChange={handleChange} 
+        <input
+          type="number"
+          name="valorComissao"
+          value={form.valorComissao || ''}
+          onChange={handleChange}
           placeholder="Digite o valor"
+          disabled={readOnly}
         />
       </div>
       
       <div className={styles.field}>
         <label>Status da Comissão:</label>
-        <input type="text" name="statusComissao" value={form.statusComissao} onChange={handleChange} />
+        <input type="text" name="statusComissao" value={form.statusComissao} onChange={handleChange} disabled={readOnly} />
       </div>
 
       {/* Bônus */}
       <div className={styles.field}>
         <label>Valor do Bônus:</label>
-        <input 
-          type="number" 
-          name="valorBonus" 
-          value={form.valorBonus || ''} 
-          onChange={handleChange} 
+        <input
+          type="number"
+          name="valorBonus"
+          value={form.valorBonus || ''}
+          onChange={handleChange}
           placeholder="Digite o valor"
+          disabled={readOnly}
         />
       </div>
       <div className={styles.field}>
         <label>Data/Pagamento do Bônus:</label>
-        <input type="date" name="dataBonus" value={form.dataBonus} onChange={handleChange} />
+        <input type="date" name="dataBonus" value={form.dataBonus} onChange={handleChange} disabled={readOnly} />
       </div>
       <div className={styles.field}>
         <label>Status do Bônus:</label>
-        <input type="text" name="statusBonus" value={form.statusBonus} onChange={handleChange} />
+        <input type="text" name="statusBonus" value={form.statusBonus} onChange={handleChange} disabled={readOnly} />
       </div>
 
       {/* Nota Fiscal */}
       <div className={styles.field}>
         <label>Data de Emissão da NF:</label>
-        <input type="date" name="dataNF" value={form.dataNF} onChange={handleChange} />
+        <input type="date" name="dataNF" value={form.dataNF} onChange={handleChange} disabled={readOnly} />
       </div>
       <div className={styles.field}>
         <label>Número da Nota Fiscal:</label>
-        <input type="text" name="numeroNF" value={form.numeroNF} onChange={handleChange} />
+        <input type="text" name="numeroNF" value={form.numeroNF} onChange={handleChange} disabled={readOnly} />
       </div>
       <div className={styles.field}>
         <label>Valor da NF Paga:</label>
-        <input 
-          type="number" 
-          name="valorNFPaga" 
-          value={form.valorNFPaga || ''} 
-          onChange={handleChange} 
+        <input
+          type="number"
+          name="valorNFPaga"
+          value={form.valorNFPaga || ''}
+          onChange={handleChange}
           placeholder="Digite o valor"
+          disabled={readOnly}
         />
       </div>
       <div className={styles.field}>
         <label>Valor do Imposto:</label>
-        <input 
-          type="number" 
-          name="valorImposto" 
-          value={form.valorImposto || ''} 
-          onChange={handleChange} 
+        <input
+          type="number"
+          name="valorImposto"
+          value={form.valorImposto || ''}
+          onChange={handleChange}
           placeholder="Digite o valor"
+          disabled={readOnly}
         />
       </div>
 
       {/* Pagamento Final */}
       <div className={styles.field}>
         <label>Pagamento do Contratante:</label>
-        <select name="pagamentoContratante" value={form.pagamentoContratante} onChange={handleChange}>
+        <select name="pagamentoContratante" value={form.pagamentoContratante} onChange={handleChange} disabled={readOnly}>
           <option value="">Selecione</option>
           <option value="Sim">Sim</option>
           <option value="Não">Não</option>
@@ -547,12 +574,13 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       </div>
       <div className={styles.field}>
         <label>Valor Final Recebido em Conta:</label>
-        <input 
-          type="number" 
-          name="valorFinalRecebido" 
-          value={form.valorFinalRecebido || ''} 
-          onChange={handleChange} 
+        <input
+          type="number"
+          name="valorFinalRecebido"
+          value={form.valorFinalRecebido || ''}
+          onChange={handleChange}
           placeholder="Digite o valor"
+          disabled={readOnly}
         />
       </div>
       <div className={styles.field}>
@@ -563,19 +591,22 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
           value={form.custoFinal || ''}
           onChange={handleChange}
           placeholder="Digite o valor"
+          disabled={readOnly}
         />
       </div>
 
       </>
       )}
 
-      <button
-        type="submit"
-        className={styles.button}
-        disabled={loading}
-      >
-        {loading ? 'Salvando...' : 'Salvar Palestra'}
-      </button>
+      {!readOnly && (
+        <button
+          type="submit"
+          className={styles.button}
+          disabled={loading}
+        >
+          {loading ? 'Salvando...' : 'Salvar Palestra'}
+        </button>
+      )}
         </form>
       </div>
     </div>
