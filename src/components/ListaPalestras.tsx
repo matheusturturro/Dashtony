@@ -9,11 +9,10 @@ import StatsCards from './StatsCards'
 import styles from './ListaPalestras.module.css'
 
 interface ListaPalestrasProps {
-  onEditar: (p: Palestra) => void
   onDetalhes: (p: Palestra) => void
 }
 
-export default function ListaPalestras({ onEditar, onDetalhes }: ListaPalestrasProps) {
+export default function ListaPalestras({ onDetalhes }: ListaPalestrasProps) {
   const [palestras, setPalestras] = useState<Palestra[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -180,7 +179,6 @@ export default function ListaPalestras({ onEditar, onDetalhes }: ListaPalestrasP
                       <EventCard
                         key={p.id}
                         event={p}
-                        onEditar={onEditar}
                         onExcluir={handleExcluirClick}
                         onDetalhes={onDetalhes}
                         gray={gray}

@@ -128,6 +128,7 @@
   max-width: 600px;
   overflow-y: auto;
   overflow-x: hidden;
+  position: relative;
 }
 
 .close {
@@ -139,6 +140,18 @@
   top: 8px;
   right: 8px;
   color: #dc3545;
+}
+
+.editButton {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .tabs {

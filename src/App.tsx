@@ -10,20 +10,19 @@ function App() {
   const [modalOpen, setModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState<'editar' | 'detalhes'>('editar')
 
-  const handleEditarPalestra = (palestra: Palestra) => {
-    setPalestraSelecionada(palestra)
-    setModalMode('editar')
-    setModalOpen(true)
-  }
-
   const handleDetalhesPalestra = (palestra: Palestra) => {
     setPalestraSelecionada(palestra)
     setModalMode('detalhes')
     setModalOpen(true)
   }
 
+  const enableEditMode = () => {
+    setModalMode('editar')
+  }
+
   const handleNovo = () => {
     setPalestraSelecionada(null)
+    setModalMode('editar')
     setModalOpen(true)
   }
 
@@ -31,13 +30,14 @@ function App() {
     <div className={styles.app}>
       <Header onNovoEvento={handleNovo} />
       <main className={styles.main}>
-        <ListaPalestras onEditar={handleEditarPalestra} onDetalhes={handleDetalhesPalestra} />
+        <ListaPalestras onDetalhes={handleDetalhesPalestra} />
         <CadastroPalestra
           palestraSelecionada={palestraSelecionada}
           onPalestraSalva={() => setModalOpen(false)}
           modo={modalMode}
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
+          onEditar={enableEditMode}
         />
       </main>
     </div>

@@ -3,7 +3,6 @@ import styles from './EventCard.module.css'
 
 interface EventCardProps {
   event: Palestra
-  onEditar: (p: Palestra) => void
   onExcluir: (p: Palestra) => void
   onDetalhes: (p: Palestra) => void
   gray?: boolean
@@ -33,7 +32,7 @@ function statusClass(status: string) {
   }
 }
 
-export default function EventCard({ event, onEditar, onExcluir, onDetalhes, gray }: EventCardProps) {
+export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventCardProps) {
   const data = new Date(event.dataMarcada + 'T12:00:00')
   const future = data >= new Date()
   const formattedDate = data
@@ -75,7 +74,6 @@ export default function EventCard({ event, onEditar, onExcluir, onDetalhes, gray
         )}
         <div className={styles.actions}>
           <button className={styles.details} onClick={() => onDetalhes(event)}>👁️ Ver Detalhes</button>
-          <button className={styles.edit} onClick={() => onEditar(event)}>✏️ Editar</button>
           <button className={styles.delete} onClick={() => onExcluir(event)}>🗑️ Excluir</button>
         </div>
       </div>

@@ -14,9 +14,10 @@ interface CadastroPalestraProps {
   isOpen: boolean
   onClose: () => void
   modo?: 'editar' | 'detalhes'
+  onEditar?: () => void
 }
 
-export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva, isOpen, onClose, modo = 'editar' }: CadastroPalestraProps) {
+export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva, isOpen, onClose, modo = 'editar', onEditar }: CadastroPalestraProps) {
   const readOnly = modo === 'detalhes'
   const [form, setForm] = useState<Palestra>({
     tipo: 'palestra',
@@ -272,6 +273,9 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
     <div className={styles.modal}>
       <div className={styles.modalContent}>
         <button className={styles.close} onClick={onClose}>×</button>
+        {modo === 'detalhes' && onEditar && (
+          <button className={styles.editButton} onClick={onEditar}>Editar</button>
+        )}
         <form
           className={`${styles.form} ${palestraSelecionada ? styles.editing : ''}`}
           onSubmit={readOnly ? e => e.preventDefault() : handleSubmit}
