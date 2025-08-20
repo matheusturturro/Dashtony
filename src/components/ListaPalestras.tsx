@@ -4,7 +4,7 @@ import { collection, query, onSnapshot, orderBy, deleteDoc, doc } from 'firebase
 import { Palestra } from '../types/Palestra'
 import EventCard from './EventCard'
 import SearchBar from './SearchBar'
-import FilterButtons, { Filter } from './FilterButtons'
+import { Filter } from '../types/Filter'
 import StatsCards from './StatsCards'
 import styles from './ListaPalestras.module.css'
 
@@ -135,7 +135,6 @@ export default function ListaPalestras({ onDetalhes }: ListaPalestrasProps) {
     <div className={styles.container}>
       <div className={styles.topBar}>
         <SearchBar value={search} onChange={setSearch} />
-        <FilterButtons active={filter} onChange={setFilter} />
         <div className={styles.monthSelector}>
           <input
             type="month"
@@ -151,7 +150,13 @@ export default function ListaPalestras({ onDetalhes }: ListaPalestrasProps) {
           )}
         </div>
       </div>
-      <StatsCards total={palestras.length} futuros={futuros} passados={passados} />
+      <StatsCards
+        total={palestras.length}
+        futuros={futuros}
+        passados={passados}
+        active={filter}
+        onChange={setFilter}
+      />
       {loading ? (
         <div className={styles.loading}>Carregando...</div>
       ) : (
