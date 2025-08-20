@@ -58,7 +58,42 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [tab, setTab] = useState<'basico' | 'financeiro' | 'viagem'>('basico')
+  const tabItems = [
+    { id: 'basico', label: 'Básico' },
+    { id: 'financeiro', label: 'Financeiro' },
+    { id: 'viagem', label: 'Viagem' }
+  ] as const
+  const [tab, setTab] = useState<(typeof tabItems)[number]['id']>('basico')
+
+  const handleTabKeyDown = (
+    e: React.KeyboardEvent<HTMLButtonElement>,
+    index: number
+  ) => {
+    const { key } = e
+    const lastIndex = tabItems.length - 1
+    let newIndex = index
+
+    if (key === 'ArrowRight') {
+      newIndex = index === lastIndex ? 0 : index + 1
+    } else if (key === 'ArrowLeft') {
+      newIndex = index === 0 ? lastIndex : index - 1
+    } else if (key === 'Home') {
+      newIndex = 0
+    } else if (key === 'End') {
+      newIndex = lastIndex
+    } else if (key === 'Enter' || key === ' ') {
+      setTab(tabItems[index].id)
+      return
+    } else {
+      return
+    }
+
+    e.preventDefault()
+    const newTab = tabItems[newIndex].id
+    setTab(newTab)
+    const btn = document.getElementById(`tab-${newTab}`)
+    btn?.focus()
+  }
 
   useEffect(() => {
     if (palestraSelecionada) {
@@ -272,30 +307,60 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
   return (
     <div className={styles.modal}>
       <div className={styles.modalContent}>
-        <button className={styles.close} onClick={onClose}>×</button>
-        {modo === 'detalhes' && onEditar && (
-          <button className={styles.editButton} onClick={onEditar}>Editar</button>
-        )}
+        <div className={styles.header}>
+          <div className={styles.topRow}>
+            <h2 className={styles.title}>
+              {modo === 'detalhes'
+                ? 'Detalhes da Palestra'
+                : palestraSelecionada
+                ? 'Editar Palestra'
+                : 'Nova Palestra'}
+            </h2>
+            <div className={styles.actions}>
+              {modo === 'detalhes' && onEditar && (
+                <button
+                  type="button"
+                  className={styles.editButton}
+                  onClick={onEditar}
+                >
+                  <span aria-hidden="true" className={styles.editIcon}>✎</span>
+                  <span className={styles.editLabel}>Editar</span>
+                </button>
+              )}
+              <button
+                type="button"
+                className={styles.closeButton}
+                aria-label="Fechar"
+                onClick={onClose}
+              >
+                ×
+              </button>
+            </div>
+          </div>
+          <nav className={styles.tabs} role="tablist">
+            {tabItems.map((t, i) => (
+              <button
+                key={t.id}
+                id={`tab-${t.id}`}
+                type="button"
+                role="tab"
+                aria-selected={tab === t.id}
+                tabIndex={tab === t.id ? 0 : -1}
+                onClick={() => setTab(t.id)}
+                onKeyDown={e => handleTabKeyDown(e, i)}
+                className={styles.tabButton}
+              >
+                {t.label}
+              </button>
+            ))}
+          </nav>
+        </div>
         <form
           className={`${styles.form} ${palestraSelecionada ? styles.editing : ''}`}
           onSubmit={readOnly ? e => e.preventDefault() : handleSubmit}
         >
-      <h2>
-        {modo === 'detalhes'
-          ? 'Detalhes da Palestra'
-          : palestraSelecionada
-          ? 'Editar Palestra'
-          : 'Nova Palestra'}
-      </h2>
-
-      <nav className={styles.tabs}>
-        <button type="button" className={tab === 'basico' ? styles.activeTab : ''} onClick={() => setTab('basico')}>Básico</button>
-        <button type="button" className={tab === 'financeiro' ? styles.activeTab : ''} onClick={() => setTab('financeiro')}>Financeiro</button>
-        <button type="button" className={tab === 'viagem' ? styles.activeTab : ''} onClick={() => setTab('viagem')}>Viagem</button>
-      </nav>
-
       {error && <div className={styles.error}>{error}</div>}
-      
+
       {/* Bloco Inicial Prioritário */}
       {tab === 'basico' && (
         <>
