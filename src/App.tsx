@@ -9,6 +9,7 @@ function App() {
   const [palestraSelecionada, setPalestraSelecionada] = useState<Palestra | null>(null)
   const [modalOpen, setModalOpen] = useState(false)
   const [modalMode, setModalMode] = useState<'editar' | 'detalhes'>('editar')
+  const [viewMode, setViewMode] = useState<'card' | 'list'>('card')
 
   const handleDetalhesPalestra = (palestra: Palestra) => {
     setPalestraSelecionada(palestra)
@@ -28,9 +29,13 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <Header onNovoEvento={handleNovo} />
+      <Header
+        onNovoEvento={handleNovo}
+        viewMode={viewMode}
+        onChangeViewMode={setViewMode}
+      />
       <main className={styles.main}>
-        <ListaPalestras onDetalhes={handleDetalhesPalestra} />
+        <ListaPalestras onDetalhes={handleDetalhesPalestra} mode={viewMode} />
         <CadastroPalestra
           palestraSelecionada={palestraSelecionada}
           onPalestraSalva={() => setModalOpen(false)}

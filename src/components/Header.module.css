@@ -7,10 +7,54 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.header h1 {
+.titleArea {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.titleArea h1 {
   margin: 0;
   color: #000;
   font-size: 1.5rem;
+}
+
+.menuWrapper {
+  position: relative;
+}
+
+.menuButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0 0.25rem;
+}
+
+.menuDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  z-index: 10;
+}
+
+.menuDropdown button {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menuDropdown button:hover,
+.activeOption {
+  background: #f3f4f6;
 }
 
 .newButton {

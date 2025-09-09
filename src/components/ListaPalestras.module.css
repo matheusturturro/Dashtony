@@ -111,3 +111,30 @@
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.grayRow {
+  background: #f9fafb;
+}
+
+.actionsCell button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-right: 0.25rem;
+}
+
+.actionsCell button:last-child {
+  margin-right: 0;
+}

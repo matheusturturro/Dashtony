@@ -7,12 +7,14 @@ import SearchBar from './SearchBar'
 import { Filter } from '../types/Filter'
 import StatsCards from './StatsCards'
 import styles from './ListaPalestras.module.css'
+import { formatDate } from '../utils/formatDate'
 
 interface ListaPalestrasProps {
   onDetalhes: (p: Palestra) => void
+  mode: 'card' | 'list'
 }
 
-export default function ListaPalestras({ onDetalhes }: ListaPalestrasProps) {
+export default function ListaPalestras({ onDetalhes, mode }: ListaPalestrasProps) {
   const [palestras, setPalestras] = useState<Palestra[]>([])
   const [loading, setLoading] = useState(true)
   const [search, setSearch] = useState('')
@@ -178,7 +180,7 @@ export default function ListaPalestras({ onDetalhes }: ListaPalestrasProps) {
                 </h2>
                 {eventos.length === 0 ? (
                   <p className={styles.emptyMonth}>nada marcado</p>
-                ) : (
+                ) : mode === 'card' ? (
                   <div className={styles.grid}>
                     {eventos.map(p => (
                       <EventCard
@@ -190,6 +192,36 @@ export default function ListaPalestras({ onDetalhes }: ListaPalestrasProps) {
                       />
                     ))}
                   </div>
+                ) : (
+                  <table className={styles.table}>
+                    <thead>
+                      <tr>
+                        <th>Nome</th>
+                        <th>Cidade/Local</th>
+                        <th>Contratante</th>
+                        <th>Data</th>
+                        <th>Hora</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {eventos.map(p => (
+                        <tr key={p.id} className={gray ? styles.grayRow : ''}>
+                          <td>{p.nome}</td>
+                          <td>{p.cidade ?? p.local}</td>
+                          <td>{p.contratante}</td>
+                          <td>{formatDate(p.dataMarcada)}</td>
+                          <td>{p.horarioEvento}</td>
+                          <td>{normalizeStatus(p.status)}</td>
+                          <td className={styles.actionsCell}>
+                            <button onClick={() => onDetalhes(p)}>👁️</button>
+                            <button onClick={() => handleExcluirClick(p)}>🗑️</button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 )}
               </div>
             )
