@@ -11,77 +11,61 @@
   transition: transform 0.5s ease, box-shadow 0.5s ease;
 }
 
-.gray {
-  background: #d6d6d6;
-}
-
 .card:hover {
-  transition: transform 0.5s ease, box-shadow 0.5s ease;
   transform: translateY(-2px) scale(1.02);
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
+.gray {
+  background: #d6d6d6;
+}
+
 .header {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.25rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .header h3 {
-  flex: 1 0 100%;
   margin: 0;
-  color: #000;
   font-size: 1.1rem;
+  color: #000;
 }
 
-.badge {
+.tags {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: #e5e7eb;
+  color: #374151;
   padding: 2px 6px;
   border-radius: 8px;
   font-size: 0.75rem;
-  color: white;
 }
-
-.palestra { background: #3b82f6; }
-.curso { background: #6366f1; }
-.outro { background: #8b5cf6; }
-.agendado { background: #06b6d4; }
-.proximo { background: #22c55e; }
-.passado { background: #6b7280; }
-.status { background: #f59e0b; }
-.statusCancelada { background: #ef4444; }
-.statusAgendada { background: #facc15; }
-.statusConfirmada { background: #22c55e; }
 
 .info {
   list-style: none;
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 0.5rem;
+  gap: 0.25rem;
   font-size: 0.875rem;
 }
+
 .info li {
   display: flex;
   align-items: center;
   gap: 0.25rem;
 }
+
 .icon {
   color: #6b7280;
 }
-
-.financeiro {
-  background: #f3f4f6;
-  padding: 0.75rem;
-  border-radius: 8px;
-  display: flex;
-  justify-content: space-between;
-}
-
-.lucro {
-  color: #22c55e;
-}
-
 
 .extra {
   position: absolute;
@@ -101,7 +85,7 @@
   transform: translateY(0);
 }
 
-.resumo {
+.observacoes {
   font-size: 0.875rem;
   color: #374151;
   background: #f9fafb;
@@ -127,7 +111,9 @@
   background: #60a5fa;
   color: white;
 }
+
 .delete {
   background: #ef4444;
   color: white;
 }
+
