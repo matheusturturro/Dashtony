@@ -46,6 +46,10 @@ export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventC
     statusText = 'Agendada'
   }
 
+  const fullRoboText = event.observacoesRobo ? `Robô: ${event.observacoesRobo}` : ''
+  const displayRoboText =
+    fullRoboText.length > 25 ? `${fullRoboText.slice(0, 22)}...` : fullRoboText
+
   return (
     <div className={`${styles.card} ${gray ? styles.gray : ''}`}>
       {event.observacoes && (
@@ -94,9 +98,9 @@ export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventC
                 onMouseEnter={handleRoboMouseEnter}
                 onMouseLeave={handleRoboMouseLeave}
               >
-                <span className={styles.roboText}>{`Robô: ${event.observacoesRobo}`}</span>
+                <span className={styles.roboText}>{displayRoboText}</span>
                 {showRoboPopup && (
-                  <div className={styles.roboPopup}>{`Robô: ${event.observacoesRobo}`}</div>
+                  <div className={styles.roboPopup}>{fullRoboText}</div>
                 )}
               </div>
             ) : (
