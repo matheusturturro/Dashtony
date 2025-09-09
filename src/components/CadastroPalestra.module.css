@@ -48,6 +48,11 @@
   font-size: 1rem;
 }
 
+.readonlyInput {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
 .field textarea {
   min-height: 100px;
   resize: vertical;

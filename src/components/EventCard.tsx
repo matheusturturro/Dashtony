@@ -1,5 +1,6 @@
 import { Palestra } from '../types/Palestra'
 import styles from './EventCard.module.css'
+import { formatDate } from '../utils/formatDate'
 
 interface EventCardProps {
   event: Palestra
@@ -10,14 +11,7 @@ interface EventCardProps {
 
 export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventCardProps) {
   // Formata data da palestra
-  const data = new Date(event.dataMarcada + 'T12:00:00')
-  const formattedDate = data
-    .toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    })
-    .replace(/\//g, '-')
+  const formattedDate = formatDate(event.dataMarcada)
 
   const statusLower = event.status?.toLowerCase()
   let statusIcon = '🟢'
@@ -79,22 +73,22 @@ export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventC
             {event.observacoesRobo ? `Robô: ${event.observacoesRobo}` : 'Robô'}
           </li>
         )}
-        <li>
+        <li className={styles.dateTime}>
           <span className={styles.icon}>📅</span>
-          {formattedDate}
+          <time dateTime={event.dataMarcada}>{formattedDate}</time>
           <span className={styles.icon}>🕒</span>
-          {event.horarioEvento}
+          <time dateTime={event.horarioEvento}>{event.horarioEvento}</time>
         </li>
         {event.infoIda && (
           <li>
             <span className={styles.icon}>✈️</span>
-            Ida: {event.infoIda}
+            Ida: {formatDate(event.infoIda)}
           </li>
         )}
         {event.infoRetorno && (
           <li>
             <span className={styles.icon}>✈️</span>
-            Retorno: {event.infoRetorno}
+            Retorno: {formatDate(event.infoRetorno)}
           </li>
         )}
       </ul>

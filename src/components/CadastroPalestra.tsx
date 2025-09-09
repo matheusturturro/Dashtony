@@ -5,6 +5,7 @@ import { collection, updateDoc, doc } from 'firebase/firestore'
 import { Palestra } from '../types/Palestra'
 import styles from './CadastroPalestra.module.css'
 import {v4 as uuidv4} from "uuid";
+import { formatDate } from '../utils/formatDate'
 
 import { setDoc } from 'firebase/firestore'; // Adicione esta importação
 const API_URL = import.meta.env.VITE_BACKEND_URL || ""
@@ -386,14 +387,22 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       </div>
       <div className={styles.field}>
         <label>Data Marcada: <span className={styles.required}>*</span></label>
-        <input
-          type="date"
-          name="dataMarcada"
-          value={form.dataMarcada}
-          onChange={handleChange}
-          required
-          disabled={readOnly}
-        />
+        {readOnly ? (
+          <input
+            type="text"
+            value={formatDate(form.dataMarcada)}
+            readOnly
+            className={styles.readonlyInput}
+          />
+        ) : (
+          <input
+            type="date"
+            name="dataMarcada"
+            value={form.dataMarcada}
+            onChange={handleChange}
+            required
+          />
+        )}
       </div>
       <div className={styles.field}>
         <label>Status:</label>
@@ -482,11 +491,39 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
         <>
       <div className={styles.field}>
         <label>Informações de Ida:</label>
-        <input type="date" name="infoIda" value={form.infoIda} onChange={handleChange} disabled={readOnly} />
+        {readOnly ? (
+          <input
+            type="text"
+            value={formatDate(form.infoIda)}
+            readOnly
+            className={styles.readonlyInput}
+          />
+        ) : (
+          <input
+            type="date"
+            name="infoIda"
+            value={form.infoIda}
+            onChange={handleChange}
+          />
+        )}
       </div>
       <div className={styles.field}>
         <label>Informações de Retorno:</label>
-        <input type="date" name="infoRetorno" value={form.infoRetorno} onChange={handleChange} disabled={readOnly} />
+        {readOnly ? (
+          <input
+            type="text"
+            value={formatDate(form.infoRetorno)}
+            readOnly
+            className={styles.readonlyInput}
+          />
+        ) : (
+          <input
+            type="date"
+            name="infoRetorno"
+            value={form.infoRetorno}
+            onChange={handleChange}
+          />
+        )}
       </div>
       <div className={styles.field}>
         <label>Hospedagem Inclusa:</label>
@@ -593,7 +630,21 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       </div>
       <div className={styles.field}>
         <label>Data/Pagamento do Bônus:</label>
-        <input type="date" name="dataBonus" value={form.dataBonus} onChange={handleChange} disabled={readOnly} />
+        {readOnly ? (
+          <input
+            type="text"
+            value={formatDate(form.dataBonus)}
+            readOnly
+            className={styles.readonlyInput}
+          />
+        ) : (
+          <input
+            type="date"
+            name="dataBonus"
+            value={form.dataBonus}
+            onChange={handleChange}
+          />
+        )}
       </div>
       <div className={styles.field}>
         <label>Status do Bônus:</label>
@@ -603,7 +654,21 @@ export default function CadastroPalestra({ palestraSelecionada, onPalestraSalva,
       {/* Nota Fiscal */}
       <div className={styles.field}>
         <label>Data de Emissão da NF:</label>
-        <input type="date" name="dataNF" value={form.dataNF} onChange={handleChange} disabled={readOnly} />
+        {readOnly ? (
+          <input
+            type="text"
+            value={formatDate(form.dataNF)}
+            readOnly
+            className={styles.readonlyInput}
+          />
+        ) : (
+          <input
+            type="date"
+            name="dataNF"
+            value={form.dataNF}
+            onChange={handleChange}
+          />
+        )}
       </div>
       <div className={styles.field}>
         <label>Número da Nota Fiscal:</label>
