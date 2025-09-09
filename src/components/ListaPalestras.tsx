@@ -26,7 +26,7 @@ export default function ListaPalestras({ onDetalhes }: ListaPalestrasProps) {
   function normalizeStatus(status: string) {
     const s = status?.toLowerCase()
     if (s === 'cancelada') return 'Cancelada'
-    if (s === 'agendada') return 'Agendada'
+    if (s === 'agendada' || s === 'nao confirmada' || s === 'não confirmada') return 'Agendada'
     if (s === 'confirmada') return 'Confirmada'
     return status
   }
