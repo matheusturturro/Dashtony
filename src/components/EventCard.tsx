@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { Palestra } from '../types/Palestra'
 import styles from './EventCard.module.css'
 import { formatDate } from '../utils/formatDate'
@@ -12,6 +13,23 @@ interface EventCardProps {
 export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventCardProps) {
   // Formata data da palestra
   const formattedDate = formatDate(event.dataMarcada)
+
+  const [showRoboPopup, setShowRoboPopup] = useState(false)
+  const roboHoverTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  function handleRoboMouseEnter() {
+    roboHoverTimeout.current = setTimeout(() => {
+      setShowRoboPopup(true)
+    }, 2500)
+  }
+
+  function handleRoboMouseLeave() {
+    if (roboHoverTimeout.current) {
+      clearTimeout(roboHoverTimeout.current)
+      roboHoverTimeout.current = null
+    }
+    setShowRoboPopup(false)
+  }
 
   const statusLower = event.status?.toLowerCase()
   let statusIcon = '🟢'
@@ -70,7 +88,20 @@ export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventC
         {event.robo && (
           <li>
             <span className={styles.icon}>🤖</span>
-            {event.observacoesRobo ? `Robô: ${event.observacoesRobo}` : 'Robô'}
+            {event.observacoesRobo ? (
+              <div
+                className={styles.roboTextWrapper}
+                onMouseEnter={handleRoboMouseEnter}
+                onMouseLeave={handleRoboMouseLeave}
+              >
+                <span className={styles.roboText}>{`Robô: ${event.observacoesRobo}`}</span>
+                {showRoboPopup && (
+                  <div className={styles.roboPopup}>{`Robô: ${event.observacoesRobo}`}</div>
+                )}
+              </div>
+            ) : (
+              <span>Robô</span>
+            )}
           </li>
         )}
         <li className={styles.dateTime}>
