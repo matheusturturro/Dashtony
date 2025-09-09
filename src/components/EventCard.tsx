@@ -23,6 +23,9 @@ export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventC
 
   return (
     <div className={`${styles.card} ${gray ? styles.gray : ''}`}>
+      {event.observacoes && (
+        <div className={styles.observacoes}>{event.observacoes}</div>
+      )}
       <div className={styles.header}>
         <h3>{event.nome}</h3>
         {event.tags && (
@@ -45,10 +48,12 @@ export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventC
             {event.contratante}
           </li>
         )}
-        <li>
-          <span className={styles.icon}>🤖</span>
-          {event.humanoide ? 'Com tecnologia' : 'Sem tecnologia'}
-        </li>
+        {event.humanoide && (
+          <li>
+            <span className={styles.icon}>🤖</span>
+            Com tecnologia
+          </li>
+        )}
         <li>
           <span className={styles.icon}>✅</span>
           {confirmada ? 'Confirmada' : 'Não confirmada'}
