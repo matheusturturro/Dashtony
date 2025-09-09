@@ -35,4 +35,10 @@ export interface Palestra {
     valorFinalRecebido: number
     custoFinal: number
     agendado: boolean
+    /** Lista de tags associadas à palestra */
+    tags?: string[]
+    /** Nome do contratante da palestra */
+    contratante?: string
+    /** Cidade onde ocorrerá a palestra */
+    cidade?: string
 }

@@ -8,33 +8,9 @@ interface EventCardProps {
   gray?: boolean
 }
 
-function badgeColor(tipo: string) {
-  switch (tipo) {
-    case 'curso':
-      return styles.curso
-    case 'outro':
-      return styles.outro
-    default:
-      return styles.palestra
-  }
-}
-
-function statusClass(status: string) {
-  switch (status.toLowerCase()) {
-    case 'cancelada':
-      return styles.statusCancelada
-    case 'agendada':
-      return styles.statusAgendada
-    case 'confirmada':
-      return styles.statusConfirmada
-    default:
-      return styles.status
-  }
-}
-
 export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventCardProps) {
+  // Formata data da palestra
   const data = new Date(event.dataMarcada + 'T12:00:00')
-  const future = data >= new Date()
   const formattedDate = data
     .toLocaleDateString('pt-BR', {
       day: '2-digit',
@@ -42,41 +18,70 @@ export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventC
       year: 'numeric',
     })
     .replace(/\//g, '-')
+
+  const confirmada = event.status?.toLowerCase() === 'confirmada'
+
   return (
     <div className={`${styles.card} ${gray ? styles.gray : ''}`}>
       <div className={styles.header}>
         <h3>{event.nome}</h3>
-        <span className={`${styles.badge} ${badgeColor(event.tipo)}`}>{event.tipo}</span>
-        {event.status && (
-          <span className={`${styles.badge} ${statusClass(event.status)}`}>{event.status}</span>
+        {event.tags && (
+          <div className={styles.tags}>
+            {event.tags.map(tag => (
+              <span key={tag} className={styles.tag}>{tag}</span>
+            ))}
+          </div>
         )}
-        {event.agendado && (
-          <span className={`${styles.badge} ${styles.agendado}`}>Agendado</span>
-        )}
-        <span className={`${styles.badge} ${future ? styles.proximo : styles.passado}`}>{future ? 'Próximo' : 'Passado'}</span>
       </div>
+
       <ul className={styles.info}>
+        <li>
+          <span className={styles.icon}>🏙️</span>
+          {event.cidade ?? event.local}
+        </li>
+        {event.contratante && (
+          <li>
+            <span className={styles.icon}>👤</span>
+            {event.contratante}
+          </li>
+        )}
+        <li>
+          <span className={styles.icon}>🤖</span>
+          {event.humanoide ? 'Com tecnologia' : 'Sem tecnologia'}
+        </li>
+        <li>
+          <span className={styles.icon}>✅</span>
+          {confirmada ? 'Confirmada' : 'Não confirmada'}
+        </li>
         <li>
           <span className={styles.icon}>📅</span>
           {formattedDate}
           <span className={styles.icon}>🕒</span>
           {event.horarioEvento}
         </li>
-        <li><span className={styles.icon}>📍</span>{event.local}</li>
-      </ul>
-      <div className={styles.financeiro}>
-        <div>R$ {event.valorVenda}</div>
-        <div className={styles.lucro}>Lucro: R$ {event.lucroFinal}</div>
-      </div>
-      <div className={styles.extra}>
-        {event.resumo && (
-          <p className={styles.resumo}>{event.resumo}</p>
+        {event.infoIda && (
+          <li>
+            <span className={styles.icon}>✈️</span>
+            Ida: {event.infoIda}
+          </li>
         )}
-        <div className={styles.actions}>
-          <button className={styles.details} onClick={() => onDetalhes(event)}>👁️ Ver Detalhes</button>
-          <button className={styles.delete} onClick={() => onExcluir(event)}>🗑️ Excluir</button>
-        </div>
+        {event.infoRetorno && (
+          <li>
+            <span className={styles.icon}>✈️</span>
+            Retorno: {event.infoRetorno}
+          </li>
+        )}
+      </ul>
+
+      <div className={styles.actions}>
+        <button className={styles.details} onClick={() => onDetalhes(event)}>
+          👁️ Ver Detalhes
+        </button>
+        <button className={styles.delete} onClick={() => onExcluir(event)}>
+          🗑️ Excluir
+        </button>
       </div>
     </div>
   )
 }
+
