@@ -19,13 +19,32 @@ export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventC
     })
     .replace(/\//g, '-')
 
-  const confirmada = event.status?.toLowerCase() === 'confirmada'
+  const statusLower = event.status?.toLowerCase()
+  let statusIcon = '🟢'
+  let statusClass = 'confirmada'
+  let statusText = 'Confirmada'
+
+  if (statusLower === 'cancelada') {
+    statusIcon = '🔴'
+    statusClass = 'cancelada'
+    statusText = 'Cancelada'
+  } else if (statusLower === 'agendada' || statusLower === 'nao confirmada' || statusLower === 'não confirmada') {
+    statusIcon = '🟡'
+    statusClass = 'agendada'
+    statusText = 'Agendada'
+  }
 
   return (
     <div className={`${styles.card} ${gray ? styles.gray : ''}`}>
       {event.observacoes && (
         <div className={styles.observacoes}>{event.observacoes}</div>
       )}
+
+      <div className={`${styles.status} ${styles[statusClass]}`}>
+        <span className={styles.icon}>{statusIcon}</span>
+        {statusText}
+      </div>
+
       <div className={styles.header}>
         <h3>{event.nome}</h3>
         {event.tags && (
@@ -54,10 +73,12 @@ export default function EventCard({ event, onExcluir, onDetalhes, gray }: EventC
             Com tecnologia
           </li>
         )}
-        <li>
-          <span className={styles.icon}>✅</span>
-          {confirmada ? 'Confirmada' : 'Não confirmada'}
-        </li>
+        {event.robo && (
+          <li>
+            <span className={styles.icon}>🤖</span>
+            {event.observacoesRobo ? `Robô: ${event.observacoesRobo}` : 'Robô'}
+          </li>
+        )}
         <li>
           <span className={styles.icon}>📅</span>
           {formattedDate}
