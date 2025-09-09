@@ -82,6 +82,14 @@
   gap: 0.25rem;
 }
 
+.dateTime {
+  gap: 0.5rem;
+}
+
+.dateTime time {
+  font-weight: 500;
+}
+
 .icon {
   color: #6b7280;
 }
