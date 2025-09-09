@@ -15,8 +15,8 @@
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-.observacoes {
-  display: none;
+.observacoes,
+.roboPopup {
   position: absolute;
   top: 0;
   left: 50%;
@@ -31,8 +31,24 @@
   z-index: 10;
 }
 
+.observacoes {
+  display: none;
+}
+
 .card:hover .observacoes {
   display: block;
+}
+
+.roboTextWrapper {
+  position: relative;
+  flex: 1;
+}
+
+.roboText {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .gray {
